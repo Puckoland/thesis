@@ -1,0 +1,46 @@
+\chapter{Inserting the bibliography}
+After linking a bibliography data\-base files to the document using
+the \verb"\"\texttt{thesis\discretionary{-}{}{}setup\{bib\discretionary{=}{=}{=}%
+\{\textit{file1},\textit{file2},\,\ldots\,\}\}} command, you can
+start citing the entries. This is just dummy text
+\parencite{borgman03} lightly sprinkled with citations
+\parencite[p.~123]{greenberg98}. Several sources can be cited at
+once: \cite{borgman03,greenberg98,thanh01}.
+\citetitle{greenberg98} was written by \citeauthor{greenberg98} in
+\citeyear{greenberg98}. We can also produce \textcite{greenberg98}%
+\ or %% Let us define a compound command:
+\def\citeauthoryear#1{(\textcite{#1},~\citeyear{#1})}%
+\citeauthoryear{greenberg98}%
+. The full bibliographic citation is:
+\emph{\fullcite{greenberg98}}. We can easily insert a bibliographic
+citation into the footnote\footfullcite{greenberg98}.
+
+The \verb"\nocite" command will not generate any
+output\nocite{muni}, but it will insert its arguments into
+the bibliography. The \verb"\nocite{*}" command will insert all the
+records in the bibliography database file into the bibliography.
+Try uncommenting the command
+%% \nocite{*}
+and watch the bibliography section come apart at the seams.
+
+When typesetting the document for the first time, citing a
+\texttt{work} will expand to [\textbf{work}] and the
+\verb"\printbibliography" command will produce no output. It is now
+necessary to generate the bibliography by running \texttt{biber
+\jobname.bcf} from the command line and then by typesetting the
+document again twice. During the first run, the bibliography
+section and the citations will be typeset, and in the second run,
+the bibliography section will appear in the table of contents.
+
+The \texttt{biber} command needs to be executed from within the
+directory, where the \LaTeX\ source file is located. In Windows,
+the command line can be opened in a directory by holding down the
+\textsf{Shift} key and by clicking the right mouse button while
+hovering the cursor over a directory.  Select the \textsf{Open
+Command Window Here} option in the context menu that opens shortly
+afterwards.
+
+With online services -- such as Overleaf -- or when using an
+automatic tool -- such as \LaTeX MK -- all commands are executed
+automatically. When you omit the \verb"\printbibliography" command,
+its location will be decided by the template.

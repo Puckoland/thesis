@@ -1,0 +1,23 @@
+%% The \chapter* command can be used to produce unnumbered chapters:
+\chapter*{Introduction}
+%% Unlike \chapter, \chapter* does not update the headings and does not
+%% enter the chapter to the table of contents. I we want correct
+%% headings and a table of contents entry, we must add them manually:
+\markright{\textsc{Introduction}}
+\addcontentsline{toc}{chapter}{Introduction}
+
+Theses are rumoured to be \enquote{the capstones of education}, so
+I decided to write one of my own. If all goes well, I will soon
+have a diploma under my belt. Wish me luck!
+
+\begin{otherlanguage}{czech}
+Říká se, že závěrečné práce jsou \enquote{vyvrcholením studia}
+a tak jsem se rozhodl jednu také napsat. Pokud vše půjde podle
+plánu, odnesu si na konci semestru diplom. Držte mi palce!
+\end{otherlanguage}
+
+\begin{otherlanguage}{slovak}
+Hovorí sa, že záverečné práce sú \enquote{vyvrcholením štúdia}
+a tak som sa rozhodol jednu tiež napísať. Ak všetko pôjde podľa
+plánu, odnesiem si na konci semestra diplom. Držte mi palce!
+\end{otherlanguage}

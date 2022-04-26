@@ -1,0 +1,42 @@
+\chapter{Inserting the index}
+After using the \verb"\makeindex" macro and loading the
+\texttt{makeidx} package that provides additional indexing
+commands, index entries can be created by issuing the \verb"\index"
+command. \index{dummy text|(}It is possible to create ranged index
+entries, which will encompass a span of text.\index{dummy text|)}
+To insert complex typographic material -- such as $\alpha$
+\index{alpha@$\alpha$} or \TeX{} \index{TeX@\TeX} --
+into the index, you need to specify a text string, which will
+determine how the entry will be sorted. It is also possible to
+create hierarchal entries. \index{vehicles!trucks}
+\index{vehicles!speed cars}
+
+After typesetting the document, it is necessary to generate the
+index by running
+\begin{center}%
+  \texttt{texindy -I latex -C utf8 -L }$\langle$\textit{locale}%
+  $\rangle$\texttt{ \jobname.idx}
+\end{center}
+from the command line, where $\langle$\textit{locale}$\rangle$
+corresponds to the main locale of your thesis -- such as
+\texttt{english}, and then typesetting the document again.
+
+The \texttt{texindy} command needs to be executed from within the
+directory, where the \LaTeX\ source file is located. In Windows,
+the command line can be opened in a directory by holding down the
+\textsf{Shift} key and by clicking the right mouse button while
+hovering the cursor over a directory. Select the \textsf{Open Command
+Window Here} option in the context menu that opens shortly
+afterwards.
+
+With online services -- such as Overleaf -- the commands are
+executed automatically, although the locale may be erroneously
+detected, or the \texttt{makeindex} tool (which is only able to
+sort entries that contain digits and letters of the English
+alphabet) may be used instead of \texttt{texindy}. In either case,
+the index will be ill-sorted.
+
+  \makeatletter\thesis@blocks@clear\makeatother
+  \phantomsection %% Print the index and insert it into the
+  \addcontentsline{toc}{chapter}{\indexname} %% table of contents.
+  \printindex
