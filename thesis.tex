@@ -101,6 +101,20 @@
 \usepackage{hyperref}
 \usepackage{cleveref}
 
+%% Scales graphics to max \textwidth.
+\newlength{\imgwidth}
+\newcommand\scalegraphics[3]{
+    \settowidth{\imgwidth}{\includegraphics{#1}}
+    \setlength{\imgwidth}{\minof{\imgwidth}{\textwidth}}
+    
+    \begin{figure}[!ht]
+      \centering
+      \caption{#2}
+      \includegraphics[width=\imgwidth]{#1}%
+      \label{fig:#3}
+    \end{figure}
+}
+
 \begin{document}
 %% Uncomment the following lines (by removing the %% at the beginning)
 %% and to print out List of Abbreviations and/or Glossary in your

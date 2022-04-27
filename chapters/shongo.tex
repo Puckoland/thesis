@@ -1,57 +1,71 @@
 \chapter{Reservation system Shongo}
-In this chapter, we will introduce the reservation system Shongo for which this thesis will make \hyperref[rest]{REST API} extension.
+This chapter intends to introduce the reservation system Shongo for which this thesis will make \hyperref[rest]{REST API} implementation.
+This chapter draws information mainly from the Shongo API documentation \footfullcite{shongoapi}. However, this documentation is outdated and is correct only partially. Multiple theses and other works have contributed to the development of the Shongo since then. Thus, much information has been drawn from these, especially theses concerning inter-domain extension \footfullcite{pavelka2016shongo} and redesign of the system \footfullcite{perichta2020}.
 
 Currently, at version v0.9.3, Shongo is a generic system used for managing resources.
-Its primary function is to manage resources reservations for virtual meetings and any physical resources, such as physical meeting rooms, vehicles or parking places.
-It allows administrators to define available resources (e.g., H.323 MCU or Adobe
-Connect Server) and users to reserve the resources mentioned before. \cite{shongo}
+Its primary function is to manage resource reservations for virtual meetings and any physical resources, such as physical meeting rooms, vehicles or parking places.
+It allows administrators to define available resources (e.g., H.323 MCU or Adobe Connect Server) and users to request a reservation for the available resources.
+Furthermore, the system provides the recording and remote control of ongoing virtual rooms using the Cisco TCS recording server, user notifications, and detailed resource usage statistics.
+\cite{shongo}
 
-CESNET association develops the system as an open-source project available at \href{https://github.com/shongo/shongo}{Github repository}, and it is currently deployed in these domains:
+CESNET association develops the system as an open-source project available at \href{https://github.com/shongo/shongo}{Github repository}.
+\enquote{CESNET is an association of universities and the Academy of Sciences of the Czech Republic that operates and develops a national e-infrastructure for science, research and education, including a computer network, computing grids, data repositories, collaborative environments and offering a wide range of services.} \cite{cesnet}
+The system is currently deployed in these domains:
 \begin{itemize}
-    \item \url{https://meetings.cesnet.cz} - reservation system for H.323/SIP and Adobe Connect virtual rooms within CESNET videoconferencing infrastructure
-    \item \url{https://meetings.cesnet.cz/ceitec} - reservation system for physical rooms of CEITEC - Central European Institute of Technology
-    \item \url{https://meetings.cesnet.cz/cuni/} - reservation system for users led in authentication system of Charles University \footnote{\url{https://cuni.cz/}}.
+    \item \url{https://meetings.cesnet.cz/} -- reservation system for \\
+    H.323/SIP and Adobe Connect virtual rooms within CESNET videoconferencing infrastructure
+    \item \url{https://meetings.cesnet.cz/ceitec/} -- reservation system for physical rooms of CEITEC --- Central European Institute of Technology
+    \item \url{https://meetings.cesnet.cz/cuni/} -- reservation system for users led in the authentication system of Charles University \footnote{\url{https://cuni.cz/}}.
 \end{itemize}
 
 Users can log in using their profile from any organization belonging to the Czech academic identity federation \footfullcite{eduid}.
 After logging in, they can freely use the system and request reservations for available resources.
 
-\enquote{CESNET is an association of universities and the Academy of Sciences of the Czech Republic that operates and develops a national e-infrastructure for science, research and education, including a computer network, computing grids, data repositories, collaborative environments and offering a wide range of services.} \cite{cesnet}
+\section{Reservations}
+As already mentioned, the primary task of the Shongo system is to manage reservations. This section aims to provide the reader with fundamental concepts behind the reservation logic.
+Physical reservations are very straightforward:
+\begin{enumerate}
+    \item A user requests a reservation of a physical resource.
+    \item If the request is permitted, he can use the physical resource for a specified period.
+\end{enumerate}
+On the other hand, virtual reservations are a little bit more complicated. Virtual rooms represent the allocation of a specific virtual resource. There are two types of virtual rooms:
+\begin{itemize}
+    \item \textbf{Permanent rooms} are devoted to long-term reservations. This type reserves virtual resource — name and a unique identifier of room (URL, phone number, SIP URI) — for the user but without capacity reservation for the chosen resource (period, periodicity, number of participants). The user has to book capacity separately after creating the permanent room.
+    \item \textbf{One-time (ad-hoc) rooms} are intended for one-time reservations of virtual resources. The controller generates a name and unique identifier according to available values from the range configured in the resource specification. That results in a new room name and identification for each reservation. A capacity is reserved when the room is created, and the room is deleted after the requested time slot ends.
+\end{itemize}
+After reserving the room, the user can set up roles for other users or groups (owner, user, reader) and add other participants with specific permissions (administrator, presenter, participant).
+If the reservation is permitted (sufficient capacity is available), the user who created the reservation and the participants added by the user can join the videoconference.
 
 \section{Architecture}
-% This section is mostly referenced from another thesis \footfullcite{pavelka2016shongo}, my primary learning material for how the Shongo system works.
-I have drawn information for this section from shongo api documentation \footfullcite{shongoapi} and another thesis \footfullcite{pavelka2016shongo}.
+In order for the reader to better understand how the system works and what exactly is being replaced or modified, this section explains the system's architecture.
 
-The system is composed of a few separate modules. Their interconnections are shown in \Cref{architecture}.
-\begin{figure}[!ht]
-  \centering
-  \caption{Shongo architecture}
-%   \input{assets/architecture}
-%   \includegraphics{assets/architecture}
-  \makebox[\textwidth]{\includegraphics[width=\paperwidth]{assets/architecture}}
-  \label{architecture}
-\end{figure}
+Architecture 
+The system is composed of a few separate modules. Their interconnections are shown in \Cref{fig:architecture}.
 
 \subsection{Controller} \label{controller}
-The controller module is the heart of the Shongo system. Its primary role is to plan requested reservations (\emph{Scheduler} sub-component) and assign necessary resources to them. Its secondary roles are informing users about their reservations (\emph{NotificationManager} sub-component) and administrate remote virtual resources (\emph{Executor} sub-component) via connected \hyperref[connector]{connectors}. Furthermore, last but not least, save this information to the relational database \emph{PostgreSQL}.
+The controller module is the heart of the Shongo system. Its primary function is to plan requested reservations (\emph{Scheduler} sub-component) and allocate necessary resources. Its secondary roles are informing users about their reservations (\emph{NotificationManager} sub-component) and administrating remote virtual resources (\emph{Executor sub-component}) through connected \hyperref[connector]{connectors}. Furthermore, last but not least, save this information to the relational database \emph{PostgreSQL}.
 
 These functionalities are made available for other components with the \emph{Application programming interface} (API) via protocol \emph{XML-RPC}.
 
 \subsection{Connector} \label{connector}
-Connector is component that enable users to connect to video rooms with their devices (PC, tablet, smartphone, ...).
+The connector is a component that enables users to connect to video rooms with their devices (PC, tablet, smartphone, ...).
 
-It is responsible for establishing, maintaining and monitoring connections with remote virtual resources.
-It contains implementations for \emph{Device Agent}s where each \emph{Device Agent} can mediate a specific device (e.g. Adobe Connect, Pexip) functions to the controller using the device's API.
-The controller communicates with the connector using the JADE (Java Agent DEvelopment) framework, which enables the connection of multiple connectors to a single controller.
+It is responsible for establishing, maintaining and monitoring connections to remote virtual resources.
+It contains implementations for \emph{Device Agent}s, and each \emph{Device Agent} provides a specific device (e.g. Adobe Connect, Pexip) features to the controller using the device’s API.
+Moreover, it enables the system to save data from the device.
+
+The controller communicates with the connector using the JADE (Java Agent DEvelopment) framework, which enables the connection of multiple connectors to a single controller. This can be done, for example, in order to distribute the load.
 
 \subsection{Authentication server}
-The authentication server authenticates incoming requests for the controller component, authenticates users, finds users from various identity providers and gets information about users for the web client.
+The authentication server authenticates incoming requests for the controller component, authenticates users, finds users from various identity providers and obtains information about users for the web client.
 Besides that, it also manages the authentication layer of the web conference system Adobe Connect. This layer uses the user's information gained after logging in via system Shibboleth \footnote{Shibboleth, \url{https://www.shibboleth.net/}}.
 
 \subsection{Web client} \label{webclient}
-The web client is the system's primary interface for users. Using frameworks \emph{SpringMVC} and \emph{AngularJS}, it generates web pages with data gained from the controller's services.
+The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the controller’s services.
 
-Thanks to this component, users can authenticate via OpenID Connect \footnote{OpenID Connect, \url{https://openid.net/connect/}} and request a reservation for any available resource comfortably via the web.
+Thanks to this component, users can authenticate via OpenID Connect \footnote{OpenID Connect, \url{https://openid.net/connect/}} and request a reservation of any available resource comfortably via the web.
 
-\subsection{Command line client}
-The command line client is the controller's additional interface used for administration. It enables system administrators to manage resources, user, groups and reservation requests which is not possible using the web client.
+\subsection{Command-line client}
+The command-line client is the controller's additional interface used for administration. It allows system administrators to manage resources, users, groups and reservation requests which is not possible using the web client.
+
+\scalegraphics{assets/architecture}{Shongo architecture}{architecture}

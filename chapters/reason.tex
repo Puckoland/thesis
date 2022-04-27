@@ -1,15 +1,17 @@
 \chapter{What to change and why}
-Monolithic systems are out of fashion.
-Nowadays, most of big systems run as micro-services that communicate together but can work as a single part.
-This opens door to containerization which makes the deployment so much easier.
-ALE ONO TO UZ JE ROZDELENE NA SERVICE VDAKA SPRINGU AJ TERAZ.
+% Monolithic systems are out of fashion.
+% Nowadays, most of big systems run as micro-services that communicate together but can work as a single part.
+% This opens door to containerization which makes the deployment so much easier.
+% ALE ONO TO UZ JE ROZDELENE NA SERVICE VDAKA SPRINGU AJ TERAZ.
 
 Second reason is user interface \Cref{webclient}. Web MVC is not as powerful as today's JavaScript frameworks like Angular or React.
 So it become the goal of another thesis. \cite{drobnakm}
 But since until now the whole communication of system was via Spring Framework in Java some new API has to be created.
 
-As we can see on Figure, Web Client component has been moved out of the Shongo system and is developed and maintained separately at \href{https://github.com/shongo/shongo-frontend}{new Github repository} \cite{drobnakm}. Additionally it is communicating with Controller via REST API instead of XML-RPC.
-The implementation of this REST API is the subject of this thesis.
+\scalegraphics{assets/architecture}{New Shongo architecture}{architecture_new}
+
+As we can see on \Cref{fig:architecture_new}, Web Client component has been moved out of the Shongo system and is developed and maintained separately at \href{https://github.com/shongo/shongo-frontend}{new Github repository}. This part has been done in another thesis \cite{drobnakm}.
+Additionally it is communicating with Controller via REST API instead of XML-RPC. The implementation of this REST API is the subject of this thesis.
 
 \section{API options}
 Today there are 3 general approaches for such API.
