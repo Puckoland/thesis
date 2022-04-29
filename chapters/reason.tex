@@ -1,20 +1,11 @@
 \chapter{What to change and why}
-% Monolithic systems are out of fashion.
-% Nowadays, most of big systems run as micro-services that communicate together but can work as a single part.
-% This opens door to containerization which makes the deployment so much easier.
-% ALE ONO TO UZ JE ROZDELENE NA SERVICE VDAKA SPRINGU AJ TERAZ.
 
-Second reason is user interface \Cref{webclient}. Web MVC is not as powerful as today's JavaScript frameworks like Angular or React.
-So it become the goal of another thesis. \cite{drobnakm}
-But since until now the whole communication of system was via Spring Framework in Java some new API has to be created.
+The main reason for changes is that the architecture concentrates on modularity; however, the system cannot be observed or managed from external sources.
+The second reason is the primary user interface --- the \hyperref[webclient]{\emph{Web Client}}. Web MVC and its server-side rendering are not as powerful as today's JavaScript frameworks like Angular or React.
+That is why developing a new front-end became a goal of another thesis. \cite{drobnakm}
+Nevertheless, until now, the whole communication took place within the system via Spring Framework in Java. In order to achieve communication between Shongo and the new Web Client (and possibly other systems or services), which is not part of the Shongo system, a new API has to be implemented.
 
 \scalegraphics{assets/shongo_architecture_new}{New Shongo architecture}{architecture_new}
 
-As we can see on \Cref{fig:architecture_new}, Web Client component has been moved out of the Shongo system and is developed and maintained separately at \href{https://github.com/shongo/shongo-frontend}{new Github repository}. This part has been done in another thesis \cite{drobnakm}.
-Additionally it is communicating with Controller via REST API instead of XML-RPC. The implementation of this REST API is the subject of this thesis.
-
-\section{API options}
-Today there are 3 general approaches for such API.
-\subsection{GraphQL}
-\subsection{RPC}
-\subsection{REST API}
+Comparing the old system architecture shown in \Cref{fig:architecture} and the new architecture shown in \Cref{fig:architecture_new} shows that the \emph{Web Client} component was moved out of the Shongo system. The new \emph{Web Client} is now developed and maintained separately at the \href{https://github.com/shongo/shongo-frontend}{new Github repository}. Another thesis was devoted to this part of the changes \cite{drobnakm}.
+Additionally, the \emph{Web Client} communicates with the \hyperref[controller]{\emph{Controller}} via \emph{HTTP} requests for the \emph{REST API} server sub-component instead of previous direct communication via \emph{XML-RPC} services. The implementation of this \emph{REST API} is the subject of this thesis.

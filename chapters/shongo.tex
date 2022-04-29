@@ -1,6 +1,6 @@
 \chapter{Reservation system Shongo}
 This chapter introduces the subject of this work, the reservation system Shongo.
-Information for this chapter was drawn mainly from the Shongo API documentation \footfullcite{shongoapi}. However, this documentation is outdated and is correct only partially. Multiple theses and other works have contributed to the development of the Shongo since then. Thus, much information has been drawn from these, especially the theses concerning inter-domain extension \footfullcite{pavelka2016shongo} and redesign of the system \footfullcite{perichta2020}.
+Information for this chapter was drawn mainly from the Shongo API documentation \footfullcite{shongoapi}. However, this documentation is outdated and is only partially correct. Since the documentation had been introduced, multiple theses and other works have contributed to the development of the Shongo system. Thus, much information has been drawn from these, especially the theses concerning inter-domain extension \footfullcite{pavelka2016shongo} and redesign of the system \footfullcite{perichta2020}.
 
 Currently, at version v0.9.3, Shongo is a generic system used for managing resources.
 Its primary function is to manage resource reservations for virtual meetings and any physical resources, such as physical meeting rooms, vehicles or parking places.
@@ -8,8 +8,9 @@ It allows administrators to define available resources (e.g., H.323 MCU or Adobe
 Furthermore, the system provides remote control and recording of ongoing virtual rooms using the Cisco TCS recording server, user notifications, and detailed resource usage statistics.
 \cite{shongo}
 
-CESNET association develops the system as an open-source project available at \href{https://github.com/shongo/shongo}{Github repository}.
-\enquote{CESNET is an association of universities and the Academy of Sciences of the Czech Republic that operates and develops a national e-infrastructure for science, research and education, including a computer network, computing grids, data repositories, collaborative environments and offering a wide range of services.} \cite{cesnet}
+The system is developed as an open-source project available at \href{https://github.com/shongo/shongo}{Github repository} by CESNET.
+CESNET is an association of universities and the Academy of Sciences of the Czech Republic. The association offers a wide range of services and develops a national electronic infrastructure for science and education. The e-infrastructure includes a computer network, computing grids, data repositories, and collaborative environments. \cite{cesnet}
+
 The system is currently deployed in these domains:
 \begin{itemize}
     \item \url{https://meetings.cesnet.cz/} -- reservation system for \\
@@ -22,7 +23,7 @@ Users can log in using their profile from any organization belonging to the Czec
 After logging in, they can freely use the system and request reservations for available resources.
 
 \section{Reservations}
-As already mentioned, the primary task of the Shongo system is to manage reservations. This section aims to provide the reader with fundamental concepts behind the reservation logic.
+As already mentioned, the primary task of the Shongo system is to manage reservations. This section describes the fundamental concepts behind the reservation logic.
 
 Physical reservations are very straightforward:
 \begin{enumerate}
@@ -39,22 +40,20 @@ After reserving the room, the user can set up roles for other users or groups (o
 If the reservation is permitted (sufficient capacity is available), the user who created the reservation and the participants added by the user can join the videoconference during the requested time slot.
 
 \section{Architecture}
-This section explains the system’s architecture, so the reader can understand better how the system works and what is being replaced or modified.
+Explaining what parts of the system were added, modified, or replaced without fundamental knowledge of the system architecture would be confusing and perhaps impossible to comprehend. This section explains the system’s architecture and components with a closer look.
 
 The system's Architecture is composed of a few separate modules. Their interconnections are shown in \Cref{fig:architecture}.
 
 \subsection{Controller} \label{controller}
 The controller module is the heart of the Shongo system.
-
 Its primary function is to plan requested reservations (\emph{Scheduler} sub-component) and allocate necessary resources.
 Its secondary roles are informing users about their reservations (\emph{NotificationManager} sub-component) and administrating remote virtual resources (\emph{Executor} sub-component) through connected \hyperref[connector]{connectors}.
-Furthermore, last but not least, save this information into the relational database \emph{PostgreSQL}.
+Furthermore, last but not least, it is responsible for saving this information into the relational database \emph{PostgreSQL}.
 
 These functionalities are made available for other components with the \emph{API} (Application programming interface) via protocol \emph{XML-RPC}.
 
 \subsection{Connector} \label{connector}
 The connector is a component that enables users to connect to video rooms with their devices (PC, tablet, smartphone).
-
 It is responsible for establishing, maintaining and monitoring connections to remote virtual resources.
 It contains implementations for \emph{Device Agent}s, and each \emph{Device Agent} provides a specific device (e.g. Adobe Connect, Pexip) features to the controller using the device’s \emph{API}.
 Moreover, it enables the system to save data from the device to the file system.

@@ -1,14 +1,126 @@
 \chapter{Implementation}
+All classes regarding REST API are stored in the Controller's package \texttt{cz.cesnet.shongo.controller.rest}. All general classes are stored there.
+
+\section{REST server}
+The cornerstone of the implementation is the REST server which listens for incoming HTTP requests from a client and responds to it in the desired way. The server listens to the URL specified in the configuration. The REST server is implemented in the \texttt{RESTApiServer.java} file and is attached to the \emph{Controller} at the start.
+
+\texttt{RESTApiServer} starts a \emph{Jetty}\footnote{\url{https://www.eclipse.org/jetty/}} server and configures it according to the configuration.
 
 \section{Configuration}
-\subsection{Addon to configfile}
-Port
+Before the implementation of API endpoints can be done, the configuration of REST API server is needed. Files that are stored in \texttt{config} sub-package.
+\subsection{Add-on to configuration file}
+The controller configuration file \texttt{shongo-controller.cfg.xml} \Cref{conf} was expanded in order to parameterize new code. The REST API server properties can be now set inside of \texttt{<rest-api>} element. There are several configurable sub elements:
+\begin{itemize}
+    \item \texttt{<host>} -- the host where the REST API should serve
+    \item \texttt{<port>} -- the port where the REST API should serve
+    \item \texttt{<ssl-key-store>} -- the SSL (Secure Socket Layer) key store
+    \item \texttt{<ssl-key-store-type>} -- the type of key store
+    \item \texttt{<ssl-key-store-password>} -- the password for key store
+\end{itemize}
+% Additionally, some elements from the web client configuration had to be moved here. The \texttt{<smtp>} and \texttt{<administrator>} configuration elements in particular.
+
+\begin{lstlisting}[language=XML, caption=REST configuration example, label=conf]
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    ...
+    <rest-api>
+        <host>meetings.cesnet.cz</host>
+        <port>9999</port>
+        <ssl-key-store>keystore/server.keystore</ssl-key-store>
+        <ssl-key-store-password>
+            (password)
+        </ssl-key-store-password>
+    </rest-api>
+    ...
+</configuration>
+\end{lstlisting}
+
 \subsection{Authentication}
 \subsection{OpenAPI and Swagger}
+For simple and general API documentation \hyperref[sec:openapi]{OpenAPI} is generated using \hyperref[sec:spring]{Spring framework}.
+For this purpose the \emph{openapi} dependency was added to controller's \texttt{pom.xml} and file \texttt{OApiConfig.java} was created. In this configuration file dependencies were imported using \emph{@Import}.
+The resulting OpenApi file is available on REST server on \emph{/v3/open-api} path.
 
-\section{Controllers}
-\subsection{Example controller}
+For user friendly 
+
+\subsection{Miscellaneous}
+\texttt{ClientWebUrl.java} file contains String constants for endpoints URLs.
+
+\section{REST Controllers}
+This section uses information from Spring documentation. \cite{springdoc}
+REST Controllers are responsible for endpoint serving.
+They are stored in \texttt{controllers} sub-package.
+They are annotated with \texttt{@RestController} annotation from Spring framework, which combines two other annotations \texttt{@Controller} --- class will be auto-detected through classpath scanning --- and \texttt{@ResponseBody} --- method return value shall be bound to the web response body.
+This is combined with \texttt{@RequestMapping} annotation, which maps web requests for server by path to method that processes incoming request and responds back. \texttt{@RequestMapping} can be also parameterized, especially with path (path to the endpoint), consumes (expected incoming message form), and produces (outgoing message form).
+
+There are only a few attributes in controller classes. These attributes are usually Controller's services that are \texttt{@Autowired} --- they are resolved to \emph{Beans} and injected into our class. This is an example of \emph{dependency injection}.
+
+The last part of REST Controllers is the declaration and implementation of methods handling specific REST resources. The methods are annotated with \texttt{@RequestMapping} or rather specific mapping according to expected HTTP method (\texttt{@GetMapping}, \texttt{@PostMapping}, \texttt{@PutMapping}, \texttt{@DeleteMapping}). These annotations take a path parameter again which is concatenated to the class's \texttt{@RequestMapping} path parameter.
+Moreover, the methods can take HTTP request parameters annotated with \texttt{@RequestParam}, path parameter annotated with \texttt{@PathVariable} (and specified in path as \texttt{\{variableName\}}) and also body parameter annotated with \texttt{@RequestBody}.
+
+\subsection{Controller example}
+\begin{lstlisting}[language=java, caption=ReservationRequestController.java, label=lst:controller]
+@RestController
+@RequestMapping("/api/v1/reservation_requests")
+public class ReservationRequestController
+{
+    private final ReservationService reservationService;
+    
+    public ReservationRequestController(@Autowired ReservationService reservationService)
+    {
+        this.reservationService = reservationService;
+    }
+    
+    @GetMapping
+    ListResponse<ReservationRequestModel> listRequests(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @RequestParam(value = "allocation_state", required = false) AllocationState allocationState,
+        ...
+    )
+    {
+        ReservationRequestListRequest request = new ReservationRequestListRequest();
+        request.setAllocationState(allocationState);
+        ...
+        ListResponse<ReservationRequestSummary> response = reservationService.listReservationRequests(request);
+        ...
+        return response;
+    }
+    
+    @PostMapping
+    void createRequest(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @RequestBody ReservationRequest request)
+    {
+        ...
+        reservationService.createReservationRequest(
+            securityToken, request.toApi());
+    }
+    
+    @GetMapping("/{id:.+}")
+    ReservationRequestDetailModel getRequest(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @PathVariable String id)
+    {
+        ReservationRequestSummary summary = cache.getReservationRequestSummary(securityToken, id);
+        ...
+        return new ReservationRequestDetailModel(summary, ...);
+    }
+    
+    @DeleteMapping("/{id:.+}")
+    void deleteRequest(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @PathVariable String id)
+    {
+        reservationService.deleteReservationRequest(
+            securityToken, id);
+    }
+    
+    ...
+}
+\end{lstlisting}
+
 
 \section{Models}
+They are stored in \texttt{models} sub-package.
 
 \section{Error handling}

@@ -1,17 +1,33 @@
 \chapter{Used Technologies}
-In this chapter, we will introduce the technologies that were used to do this thesis.
+In this chapter, we will introduce the technologies that were used to do this work.
 
-\section{Spring Framework}
+\section{Spring Framework} \label{sec:spring}
 The Shongo system is written in Java. And the Spring Framework was used to develop it. \cite{spring}
 The Spring Framework is. \cite{walls2022spring}
 
-\section{REST} \label{rest}
+\section{Representational State Transfer} \label{rest}
+Representational State Transfer or \texttt{REST} is an architectural style for distributed hypermedia systems. \cite{fielding2000rest}
+\subsection{REST design principles}
+Unlike other API designs such as XML-RPC or SOAP, REST APIs can developed using virtually any language and support any format for communication. However, there is a set of rules that has to be followed in order to call it a REST API.
 
-\section{OpenAPI}
+These rules are called REST design principles --- also known as architectural constraints:
+\cite{ibmrest}
+\begin{enumerate}
+    \item \textbf{Uniform interface} -- all API requests for the same resource should have a same form disregards of what is the request origin. Same piece of data, such as name or email of a user, belongs to one uniform URI (uniform resource identifier).
+    \item \textbf{Client-server decoupling} -- client and server side of application should be completely independent of each other. Client should have only one information --- the URI of requested resource. Meaning it cannot interact with server in any other ways. Analogically the server should affect the client in no other way than passing requested data to it.
+    \item \textbf{Statelessness} -- each request has to include all the information needed to processing it. Meaning that server is not allowed to store any data related to request and there are no server-side sessions.
+    \item \textbf{Cacheability} -- as low as possible requests should be made to reduce traffic and improve performance, so as many as possible resources should be cacheable. Server should also inform client whether given data in response is suitable for caching.
+    \item \textbf{Layered system architecture} -- requests and responses can go through many layers on their way. There may be a number of different intermediaries in the communication. As a result neither server nor client can assume that they are communicating directly with application or with an intermediary.
+    \item \textbf{Code on demand (optional)} -- in some cases the response can be executable code (Java applets for example). In these cases, the code should only run on-demand.
+\end{enumerate}
 
-\section{Swagger}
+\section{OpenAPI} \label{sec:openapi}
+
+\section{Swagger} \label{sec:swagger}
 The Swagger is the most used modern way to document REST APIs.
 
 \section{Mockoon}
 
 \section{Postman}
+
+\section{lombok}
