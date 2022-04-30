@@ -1,0 +1,59 @@
+\begin{lstlisting}[language=java, caption=ReservationRequestController.java, label=lst:controller]
+@RestController
+@RequestMapping("/api/v1/reservation_requests")
+public class ReservationRequestController
+{
+    private final ReservationService reservationService;
+    
+    public ReservationRequestController(@Autowired ReservationService reservationService)
+    {
+        this.reservationService = reservationService;
+    }
+    
+    @GetMapping
+    ListResponse<ReservationRequestModel> listRequests(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @RequestParam(value = "allocation_state", required = false) AllocationState allocationState,
+        ...
+    )
+    {
+        ReservationRequestListRequest request = new ReservationRequestListRequest();
+        request.setAllocationState(allocationState);
+        ...
+        ListResponse<ReservationRequestSummary> response = reservationService.listReservationRequests(request);
+        ...
+        return response;
+    }
+    
+    @PostMapping
+    void createRequest(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @RequestBody ReservationRequest request)
+    {
+        ...
+        reservationService.createReservationRequest(
+            securityToken, request.toApi());
+    }
+    
+    @GetMapping("/{id:.+}")
+    ReservationRequestDetailModel getRequest(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @PathVariable String id)
+    {
+        ReservationRequestSummary summary = cache.getReservationRequestSummary(securityToken, id);
+        ...
+        return new ReservationRequestDetailModel(summary, ...);
+    }
+    
+    @DeleteMapping("/{id:.+}")
+    void deleteRequest(
+        @RequestAttribute(TOKEN) SecurityToken securityToken,
+        @PathVariable String id)
+    {
+        reservationService.deleteReservationRequest(
+            securityToken, id);
+    }
+    
+    ...
+}
+\end{lstlisting}
