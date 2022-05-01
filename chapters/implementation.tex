@@ -2,16 +2,17 @@
 All classes related to the REST API are stored in the Controller’s package  \texttt{cz.cesnet.shongo.controller.rest}.
 Aside from this package, the only changes made are in a few files that retrieve data from the database --- where additional data were required to be loaded --- and inter-domain implementation files\cite{pavelka2016shongo} whose configuration has been merged with the REST configuration.
 
-\section{REST server}
-The cornerstone of the implementation is the REST server which listens for incoming HTTP requests from clients and responds to them in the desired way. The REST server is implemented in the \texttt{RESTApiServer.java} file. At the start of the Controller service, it is attached to the \emph{Controller}.
+\section{REST Server}
+The cornerstone of the implementation is the REST server which listens for incoming HTTP requests from clients and responds to them in the desired way. The REST server is implemented in the \texttt{RESTApiServer} class.
+At the start of the \emph{Controller} service, it is attached to the service.
 
 \texttt{RESTApiServer} starts a \emph{Jetty}\footnote{\url{https://www.eclipse.org/jetty/}} server and configures it according to the controller configuration. The server then listens on the host and port specified in the configuration.
 
 \section{Configuration}
 The REST server configuration is required before implementing API endpoints. These configuration files are stored in the \texttt{config} sub-package.
 
-\subsection{Add-on to the configuration file}
-First, the configuration of the REST server itself is essential. The controller configuration file \texttt{shongo-controller.cfg.xml} has been extended with the parameterization of the new code. Thanks to that, Shongo administrators can set the REST API server properties inside the \texttt{<rest-api>} XML element. An example of this new configuration is shown in \Cref{conf}. There are several configurable sub elements:
+\subsection{Configuration File Extension}
+First, the configuration of the REST server itself is essential. The controller configuration file \texttt{shongo-controller.cfg.xml} has been extended with the parameterization for the new code. Thanks to that, Shongo administrators can set the REST API server properties inside the \texttt{<rest-api>} XML element. An example of this new configuration is shown in \Cref{conf}. There are several configurable sub elements:
 \begin{itemize}
     \item \texttt{<host>} -- the host where the REST API shall serve
     \item \texttt{<port>} -- the port where the REST API shall serve
@@ -37,28 +38,28 @@ First, the configuration of the REST server itself is essential. The controller 
 \end{lstlisting}
 
 \subsection{Security}
-Next, the security and authentication had to be configured. For this purpose, \emph{Spring security} is used. Spring security dependencies have been added to \texttt{pom.xml} , and security configuration files were stored in \texttt{config.security} sub-package.
+Next, the security and authentication had to be configured. For this purpose, \emph{Spring security} is used. Spring security dependencies have been added to \emph{Controller}'s \texttt{pom.xml}, and security configuration files were stored in \texttt{config.security} sub-package.
 
-The web security is configured in the \texttt{SecurityConfig.java} file annotated with the Spring \texttt{@EnableWebSecurity} annotation, which allows this class to configure web security\cite{springdocumentation}.
+The web security is configured in the \texttt{SecurityConfig} class annotated with the Spring \texttt{@EnableWebSecurity} annotation, which allows this class to configure web security\cite{springdocumentation}.
 This configuration file defines what should happen to the incoming request. The request filters are added, and CORS (Cross-Origin Resource Sharing) is configured here. The paths that should be skipped in the authentication process are also set here. These include OpenAPI, Swagger, report, and inter-domain\cite{pavelka2016shongo} endpoints.
 
-Additionally, \texttt{AuthFilter.java} is added, which serves as a middleware. It processes each request (omitting those configured in SecurityConfig) using the following steps:
+Additionally, \texttt{AuthFilter} is added, which serves as a middleware. It processes each request (omitting those configured in SecurityConfig) using the following steps:
 \begin{enumerate}
     \item decode an access token wrapped in the HTTP request authorization header as a bearer token
     \item check the token authorization
-    \item convert the token into \texttt{SecurityToken.java} which contains \emph{access token} for Shongo Controller and cached information about the user to whom the token belongs
+    \item convert the token into \texttt{SecurityToken} object which contains \emph{access token} for Shongo Controller and cached information about the user to whom the token belongs
     \item add this new object to the request attributes using the \texttt{TOKEN} key so that subsequent endpoint handling (next middleware or final method) can effortlessly work with it
 \end{enumerate}
-If the token is not present or is invalid, the server responds with an HTTP 401 UNAUTHORIZED response code.
+If the token is not present or is invalid, the server responds with an HTTP \emph{401 UNAUTHORIZED} response code.
 
 \subsection{OpenAPI and Swagger}
-The \hyperref[sec:openapi]{OpenAPI} specification is generated using Springdoc from the \hyperref[sec:spring]{Spring framework} for general and straightforward API documentation.
-For this purpose, the \emph{sprigdoc-openapi} dependency was added to Controller's \texttt{pom.xml}, and the \texttt{OpenApiConfig.java} file was created. In this configuration file, dependencies were imported using Spring \emph{@Import} annotation.
+The \hyperref[sec:openapi]{OpenAPI} specification is generated using Springdoc from the \hyperref[sec:spring]{Spring framework}, so the users can have general and straightforward API documentation available to them.
+For this purpose, the \emph{sprigdoc-openapi} dependency was added to \emph{Controller}'s \texttt{pom.xml}, and the \texttt{OpenApiConfig} class was created. In this configuration file, Springdoc dependencies were imported using Spring \emph{@Import} annotation.
 Springdoc generates OpenAPI specification based on Spring web annotations, but Springdoc annotations such as \texttt{@Operation} or \texttt{@ApiResponses} can customize the resulting specification.
 The resulting OpenAPI file is added to the REST server and is available at the \texttt{/v3/open-api} path. \cite{springdoc}
 
 The \hyperref[sec:swagger]{Swagger UI} is then used for user-friendly visualization of the documentation mentioned above.
-The user interface (web site) is acquired and saved in the project resources using the same springdoc-openapi dependency as for OpenAPI specification. After that, the default OpenAPI path is modified from \texttt{/petstore} to \texttt{/v3/open-api}. Finally, we add these resources to the REST API server and make them available at the  \texttt{/swagger-ui/index.html} path.
+The user interface (web site) is acquired and saved in the project resources using the same \emph{springdoc-openapi} dependency as for OpenAPI specification. After that, the default OpenAPI path is modified from \texttt{https://\-petstore.swagger.io\-/v2/swagger\-.json} to \texttt{/v3/open-api}. Finally, we add these resources to the REST API server and make them available at the  \texttt{/swagger-ui/index.html} path.
 
 \section{REST Controllers}
 This section uses information from Spring documentation \cite{springdocumentation}.
@@ -77,7 +78,7 @@ In addition, the methods can retrieve HTTP request attributes annotated with \te
 \input{assets/controller}
 
 \section{Data Models}
-Model classes are stored in the \texttt{models} sub-package and are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the \hyperref[sec:lombok]{project Lombok} is used for most of them. Jackson can then serialize and deserialize these classes as described in \Cref{sec:jackson}.
+Model classes are stored in the \texttt{models} sub-package and are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the \hyperref[sec:lombok]{project Lombok}. \emph{Jackson} can then serialize and deserialize these classes as described in \Cref{sec:jackson}.
 That does not mean that these classes cannot include anything else. Most importantly, they usually also contain \texttt{fromApi()} and \texttt{toApi()} methods which serve as converters from and to Controller API objects.
 
 \begin{lstlisting}[language=java, caption=RoomModel.java, label=lst:model]
@@ -109,11 +110,11 @@ public class RoomModel {
 \end{lstlisting}
 
 
-\section{Error handling}
+\section{Error Handling}
 Quite many things can go wrong while processing a request. For this reason, the \texttt{error} sub-package was created for files concerning errors and their handling.
-For exceptional cases, new exceptions were made, such as \texttt{UnsupportedApiException.java} or \texttt{ObjectInaccessibleException.java}.
+For exceptional cases, new exceptions were made, such as \texttt{UnsupportedApiException} or \texttt{ObjectInaccessibleException}.
 These (and any other) exceptions can be thrown during request processing, in which case, the server responds with HTTP response 500 Internal Server Error and prints the \emph{stacktrace} to the HTTP body by default.
-To provide better information for the client, \texttt{GlobalControllerExceptionHandler.java} was implemented, annotated with Spring web annotation \texttt{@RestControllerAdvice}.
+To provide better information for the client, \texttt{GlobalController\-ExceptionHandler} class was implemented, annotated with Spring web annotation \texttt{@RestControllerAdvice}.
 The methods in the class are annotated with \texttt{@ExceptionHandler}, which takes an exception as a parameter. If this exception is thrown, the request processing intercepts and the annotated method runs instead.
 These methods can handle the exception and then respond to the client with the \texttt{ResponseEntity} object. As a result, any object can be passed into the HTTP response body with any HTTP response status code.
 
@@ -130,6 +131,6 @@ public class GlobalControllerExceptionHandler
 \end{lstlisting}
 
 \section{Miscellaneous}
-The \texttt{ClientWebUrl.java} file holds the String constants for the endpoints paths. All REST API endpoints paths have the default prefix --- \texttt{/api/v1}.
+The \texttt{ClientWebUrl} class holds the String constants for the endpoints paths. All REST API endpoints paths have the default prefix --- \texttt{/api/v1}.
 
-\texttt{Cache.java} and \texttt{CacheProvider.java} supply a simple cache for several frequently retrieved entities represented by \texttt{ExpirationMap}, which stores the requested entities for a determined amount of time, so the REST API does not have to wait for a much slower database after each request.
+\texttt{Cache} and \texttt{CacheProvider} classes supply a simple \emph{cache} for several frequently retrieved entities represented by \texttt{ExpirationMap}, which stores the requested entities for a determined amount of time, so the REST API does not have to wait for a much slower database after each request.

@@ -1,4 +1,4 @@
-\chapter{Reservation system Shongo}
+\chapter{Reservation System Shongo}
 This chapter introduces the subject of this work, the reservation system Shongo.
 Information for this chapter was drawn mainly from the Shongo API documentation \footfullcite{shongoapi}. However, this documentation is outdated and is only partially correct. Since the documentation had been introduced, multiple theses and other works have contributed to the development of the Shongo system. Thus, much information has been drawn from these, especially the theses concerning inter-domain extension \footfullcite{pavelka2016shongo} and redesign of the system \footfullcite{perichta2020}.
 
@@ -60,16 +60,16 @@ Moreover, it enables the system to save data from the device to the file system.
 
 The controller communicates with the connector using the \emph{JADE} (Java Agent DEvelopment) framework, which enables the connection of multiple connectors to a single controller. This can be done, for example, in order to distribute the load.
 
-\subsection{Authentication server}
+\subsection{Authentication Server}
 The authentication server authenticates incoming requests for the controller component, authenticates users, finds users from various identity providers and obtains information about users for the web client.
 Besides that, it also manages the authentication layer of the web conference system Adobe Connect. This layer uses the user's information gained after logging in via system Shibboleth\footnote{Shibboleth, \url{https://www.shibboleth.net/}}.
 
-\subsection{Web client} \label{webclient}
+\subsection{Web Client} \label{webclient}
 The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the controller’s services.
 
 Thanks to this component, users can authenticate via OpenID Connect \footnote{OpenID Connect, \url{https://openid.net/connect/}} and request a reservation of any available resource comfortably via the web browser.
 
-\subsection{Command-line client}
+\subsection{Command-line Client}
 The command-line client is the controller's additional interface used for administration. It allows system administrators to manage resources, users, groups and reservation requests which is not possible using the web client.
 
 \scalegraphics{assets/shongo_architecture}{Shongo architecture}{architecture}
