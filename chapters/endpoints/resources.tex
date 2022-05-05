@@ -1,0 +1,45 @@
+\section{Resources}
+Endpoints discussed in this section are endpoints concerning \texttt{Resource}.
+They are implemented in \texttt{ResourcesController}.
+\subsection{List Roles}
+\begin{table}[ht!]
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        technology & QUERY & Filters resources by given \emph{TechnologyModel} \\  
+        tag & QUERY & Filters resources by given \emph{tag}
+        \end{tabularx}
+    \caption{List resources parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/resources}
+    \item \textbf{Description}\\
+        Lists all available \texttt{Resource}s.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} \text{[Resource]}}
+\end{description}
+\subsection{Resource Capacity Utilization}
+\begin{table}[ht!]
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        interval\_from & QUERY & Computes interval from this date \\  
+        interval\_to & QUERY & Computes interval to this date \\
+        unit & QUERY & Divides interval into chunks as big as the \emph{unit} states \\
+        refresh & QUERY & Forces refresh of utilization computation if \emph{true} \\
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of items to return
+        \end{tabularx}
+    \caption{Resource utilization parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/resources/capacity\_utilizations}
+    \item \textbf{Description}\\
+        Lists \texttt{CapacityUtilization}s for all \texttt{Resources} in given interval, spited by \emph{unit}.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} ListResponse<CapacityUtilization>}
+\end{description}

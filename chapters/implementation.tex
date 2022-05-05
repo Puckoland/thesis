@@ -4,7 +4,7 @@ Aside from this package, the only changes made are in a few files that retrieve 
 
 \section{REST Server}
 The cornerstone of the implementation is the REST server which listens for incoming HTTP requests from clients and responds to them in the desired way. The REST server is implemented in the \texttt{RESTApiServer} class.
-At the start of the \emph{Controller} service, it is attached to the service.
+At the start of the \emph{Controller} service, the REST server is attached to the \emph{Controller}.
 
 \texttt{RESTApiServer} starts a \emph{Jetty}\footnote{\url{https://www.eclipse.org/jetty/}} server and configures it according to the controller configuration. The server then listens on the host and port specified in the configuration.
 
@@ -41,21 +41,47 @@ First, the configuration of the REST server itself is essential. The controller 
 Next, the security and authentication had to be configured. For this purpose, \emph{Spring security} is used. Spring security dependencies have been added to \emph{Controller}'s \texttt{pom.xml}, and security configuration files were stored in \texttt{config.security} sub-package.
 
 The web security is configured in the \texttt{SecurityConfig} class annotated with the Spring \texttt{@EnableWebSecurity} annotation, which allows this class to configure web security\cite{springdocumentation}.
-This configuration file defines what should happen to the incoming request. The request filters are added, and CORS (Cross-Origin Resource Sharing) is configured here. The paths that should be skipped in the authentication process are also set here. These include OpenAPI, Swagger, report, and inter-domain\cite{pavelka2016shongo} endpoints.
+This configuration file defines what should happen to the incoming request. The request filters are added to the request processing, and CORS (Cross-Origin Resource Sharing)\footnote{\url{https://www.w3.org/TR/cors/}} is configured here. The paths that should be skipped in the authentication process are also set here. At the moment, these include OpenAPI, Swagger, inter-domain endpoints\cite{pavelka2016shongo}, and endpoints responsible for processing problem reports.
 
-Additionally, \texttt{AuthFilter} is added, which serves as a middleware. It processes each request (omitting those configured in SecurityConfig) using the following steps:
+Additionally, \texttt{AuthFilter} is added, which serves as a REST API middleware. It processes each request (omitting those configured in SecurityConfig) using the following steps:
 \begin{enumerate}
-    \item decode an access token wrapped in the HTTP request authorization header as a bearer token
-    \item check the token authorization
-    \item convert the token into \texttt{SecurityToken} object which contains \emph{access token} for Shongo Controller and cached information about the user to whom the token belongs
-    \item add this new object to the request attributes using the \texttt{TOKEN} key so that subsequent endpoint handling (next middleware or final method) can effortlessly work with it
+    \item Decode an access token wrapped in the HTTP request authorization header as a bearer token.
+    \item Check the token authorization.
+    \item Convert the token into \texttt{SecurityToken} object which contains an \emph{access token} for Shongo Controller and cached information about the user to whom the token belongs.
+    \item Add this new object to the request attributes using the \texttt{TOKEN} key so that subsequent endpoint handling (next middleware or final method) can effortlessly work with it.
 \end{enumerate}
 If the token is not present or is invalid, the server responds with an HTTP \emph{401 UNAUTHORIZED} response code.
 
 \subsection{OpenAPI and Swagger}
 The \hyperref[sec:openapi]{OpenAPI} specification is generated using Springdoc from the \hyperref[sec:spring]{Spring framework}, so the users can have general and straightforward API documentation available to them.
-For this purpose, the \emph{sprigdoc-openapi} dependency was added to \emph{Controller}'s \texttt{pom.xml}, and the \texttt{OpenApiConfig} class was created. In this configuration file, Springdoc dependencies were imported using Spring \emph{@Import} annotation.
-Springdoc generates OpenAPI specification based on Spring web annotations, but Springdoc annotations such as \texttt{@Operation} or \texttt{@ApiResponses} can customize the resulting specification.
+For this purpose, the \emph{springdoc-openapi} dependency was added to \emph{Controller}'s \texttt{pom.xml}, and the \texttt{OpenApiConfig} class was created. In this configuration file, Springdoc dependencies were imported using Spring's \emph{@Import}, global API attributes were defined with \texttt{@OpenAPIDefinition}, and security was defined with \texttt{@SecurityScheme} annotation.
+This is shown in \Cref{lst:openapi}.
+\begin{lstlisting}[language=Java, caption=OpenApiConfig.java, label=lst:openapi]
+@Configuration
+@EnableWebMvc
+@OpenAPIDefinition(
+        info = @Info(title = "Shongo API", version = "v1"),
+        security = @SecurityRequirement(name = "bearerAuth")
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer"
+)
+@ComponentScan(basePackages = {"org.springdoc"})
+@Import({
+        SpringDocConfiguration.class,
+        SpringDocWebMvcConfiguration.class,
+        SwaggerConfig.class,
+        SwaggerUiConfigProperties.class,
+        SwaggerUiOAuthProperties.class,
+        JacksonAutoConfiguration.class
+})
+class OpenApiConfig implements WebMvcConfigurer {
+    ...
+}
+\end{lstlisting}
+Springdoc generates OpenAPI specification based on Spring web annotations by default, but Springdoc annotations such as \texttt{@Operation} or \texttt{@ApiResponses} can customize the resulting specification.
 The resulting OpenAPI file is added to the REST server and is available at the \texttt{/v3/open-api} path. \cite{springdoc}
 
 The \hyperref[sec:swagger]{Swagger UI} is then used for user-friendly visualization of the documentation mentioned above.
@@ -63,35 +89,79 @@ The user interface (web site) is acquired and saved in the project resources usi
 
 \section{REST Controllers}
 This section uses information from Spring documentation \cite{springdocumentation}.
-The REST Controllers are responsible for operating the endpoint and are stored in the \texttt{controllers} sub-package.
+The REST Controllers are responsible for operating the API endpoints and are stored in the \texttt{controllers} sub-package. An example of such a Controller can be observed in \Cref{lst:controller}.
 
-They are annotated with \texttt{@RestController} annotation from the Spring framework, which combines two additional annotations: \texttt{@Controller} --- class will be auto-detected through classpath scanning --- and \texttt{@ResponseBody} --- return value of the method will be bound to the HTTP response body.
+The REST Controllers are annotated with \texttt{@RestController} annotation from the Spring framework, which combines two other annotations:
+\begin{description}
+    \item \texttt{@Controller} -- makes the class auto-detectable through classpath scanning
+    \item \texttt{@ResponseBody} -- binds the return values of the mapped methods to the HTTP response body
+\end{description}
 This annotation is combined with the \texttt{@RequestMapping} annotation, which uses the web request path to map the incoming request to the method that processes the request and responds to the client. \texttt{@RequestMapping} can also be parameterized, particularly with path (path to the endpoint), consumes (expected incoming body form), and produces (outgoing body form).
 
-There are usually only a few attributes in the controller classes. These attributes are generally Controller’s services, and \emph{dependency injection} is used to access these services. Thanks to Spring annotation \texttt{@Autowired}, they are resolved to \emph{Beans} defined in \texttt{rest-api-servlet.xml} and injected into the controller class.
+There are usually only a few attributes in the controller classes. These attributes are generally Controller’s services, and \emph{dependency injection} is used to access these services. Thanks to Spring annotation \texttt{@Autowired}, they are resolved to \emph{Beans} defined in \texttt{rest-api-servlet.xml} and injected into the controller class. The example of this file can be noticed in \Cref{lst:beans}.
+
+\begin{lstlisting}[language=XML, caption=rest-api-servlet.xml, label=lst:beans]
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns=
+"http://www.springframework.org/schema/beans"
+       ...>
+    <context:component-scan base-package="cz.cesnet.shongo.controller"/>
+    <mvc:annotation-driven />
+    <aop:aspectj-autoproxy />
+    
+    <bean id="controller" class=
+    "cz.cesnet.shongo.controller.Controller" factory-method="getInstance"/>
+    <bean id="configuration" factory-bean="controller" factory-method="getConfiguration"/>
+    <bean id="controllerClient" class=
+    "cz.cesnet.shongo.controller.ControllerClient">
+        <constructor-arg>
+            <bean factory-bean="configuration" factory-method="getRpcUrl"/>
+        </constructor-arg>
+    </bean>
+    <bean id="controllerReservationService" factory-bean="controllerClient" factory-method="getService">
+        <constructor-arg value=
+        "cz.cesnet.shongo.controller.api.rpc.
+        ReservationService" type="java.lang.Class"/>
+    </bean>
+    ...
+    <bean id="cache" class=
+    "cz.cesnet.shongo.controller.rest.Cache"/>
+</beans>
+\end{lstlisting}
 
 The last part of REST Controllers is the declaration and implementation of methods handling distinct REST resources. The methods are annotated with \texttt{@RequestMapping} or rather an exact mapping according to the selected HTTP method (\texttt{@GetMapping}, \texttt{@PostMapping}, \texttt{@PutMapping}, \texttt{@DeleteMapping}).
 These annotations also take a path parameter, which is then concatenated to the class’s \texttt{@RequestMapping} path parameter.
 In addition, the methods can retrieve HTTP request attributes annotated with \texttt{@RequestAttribute} (most importantly SecurityToken added by AuthFilter), HTTP request parameters annotated with \texttt{@RequestParam}, path parameters annotated with \texttt{@PathVariable} (and specified in the path as \texttt{"\{variableName\}"}) and also body parameter annotated with \texttt{@RequestBody}.
 
-\subsection{Controller example}
 \input{assets/controller}
 
 \section{Data Models}
-Model classes are stored in the \texttt{models} sub-package and are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the \hyperref[sec:lombok]{project Lombok}. \emph{Jackson} can then serialize and deserialize these classes as described in \Cref{sec:jackson}.
+Model classes are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. The models are stored in the \texttt{models} sub-package. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the \hyperref[sec:lombok]{project Lombok}.
+\emph{Jackson} can then serialize and deserialize these classes as described in \Cref{sec:jackson}. Attributes not eligible for serialization are annotated with \texttt{@JacksonIgnore} and for custom name of field in serialized object \texttt{@JacksonProperty("field\_name")} is used.
 That does not mean that these classes cannot include anything else. Most importantly, they usually also contain \texttt{fromApi()} and \texttt{toApi()} methods which serve as converters from and to Controller API objects.
 
 \begin{lstlisting}[language=java, caption=RoomModel.java, label=lst:model]
+// Generates constructor, getters, setters, equals, and hashCode functions
+// These generated functions enables Jackson to (de)serialize this object
 @Data
+// Represents Controller's executable
 public class RoomModel {
+
+    // Ignores this attribute during (de)serialization
+    @JacksonIgnore
+    private Cache cache;
 
     private String id;
     private ExecutableSummary.Type type;
     private TimeInterval slot;
     private TechnologyModel technology;
     private RoomState state;
+    // (De)serializes this attribute to license_count field
+    @JsonProperty(license_count)
+    private int licenceCount;
     ...
 
+    // Creates this object from data acquired from Controller service
     public static RoomModel toApi(ExecutableSummary summary)
     {
         RoomModel roomModel = new RoomModel();

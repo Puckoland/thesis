@@ -5,6 +5,9 @@ In this chapter, we will introduce the technologies that were used to do this wo
 The Shongo system is written in Java. And the Spring Framework was used to develop it. \cite{spring}
 The Spring Framework is. \cite{walls2022spring}
 
+Spring uses embedded \texttt{ObjectMapper} from \hyperref[sec:jackson]{Jackson library} internally to serialize or deserialize foreign formats (mainly JSON) to Java objects automatically. This is very useful when dealing with HTTP requests which usually uses JSON for object formatting. Thanks to this developer can easily use simple model objects to acquire or provide data to client via HTTP communication.
+
+
 \section{Representational State Transfer} \label{rest}
 Representational State Transfer or \texttt{REST} is an architectural style for distributed hypermedia systems. \cite{fielding2000rest}
 \subsection{REST design principles}
@@ -21,17 +24,70 @@ These rules are called REST design principles --- also known as architectural co
     \item \textbf{Code on demand (optional)} -- in some cases the response can be executable code (Java applets for example). In these cases, the code should only run on-demand.
 \end{enumerate}
 
+
 \section{OpenAPI} \label{sec:openapi}
 
-\section{Swagger} \label{sec:swagger}
+
+\section{Swagger UI} \label{sec:swagger}
 The Swagger is the most used modern way to document REST APIs.
+\scalegraphics{assets/swagger.png}{Swagger UI}{swagger}
 \cite{swagger}
 
+
 \section{Mockoon} \label{sec:mockoon}
+Mockoon is an open-source tool for design and mocking REST APIs.
+Because of its mocking capabilities it was chosen for synchronization of REST API development with front-end development \cite{drobnakm} and thanks to that it was also used as an unofficial designing tool for the API.
+
 
 \section{Postman} \label{sec:postman}
 
-\section{Lombok} \label{sec:lombok}
+
+\section{Project Lombok} \label{sec:lombok}
+Lombok is an open-source Java library that generates frequently used Java code using simple annotations like \texttt{@Getter}, \texttt{@Setter}, \texttt{@Data} or \texttt{@Builder}.
+To give just a taste of what is possible with Lombok compare \Cref{lst:lombok} and \Cref{lst:vanilla}.
+\begin{lstlisting}[language=Java, caption=Vanilla Java, label=lst:vanilla]
+public class DataExample {
+  private final String name;
+  private int age;
+  private double score;
+  private String[] tags;
+  
+  public DataExample(String name) {
+    this.name = name;
+  }
+  
+  public String getName() {
+    return this.name;
+  }
+  
+  void setAge(int age) {
+    this.age = age;
+  }
+  
+  public int getAge() {
+    return this.age;
+  }
+  
+  ...
+  
+  @Override public String toString() {...}
+  
+  @Override public boolean equals(Object o) {...}
+  
+  @Override public int hashCode() {...}
+\end{lstlisting}
+\begin{lstlisting}[language=Java, caption=Java with Lombok, label=lst:lombok]
+@Data public class DataExample {
+  private final String name;
+  @Setter(AccessLevel.PACKAGE) private int age;
+  private double score;
+  private String[] tags;
+}
+\end{lstlisting}
+\cite{lombok}
+
 
 \section{Jackson} \label{sec:jackson}
-Jackson serializes classes using getters and deserializes using setters from JSON (JavaScript Object Notation), alternatively XML (Extensible Markup Language) or any other supported format.
+Jackson\footnote{\url{https://github.com/FasterXML/jackson}} or \quote{the Java JSON library} is an open-source suite of data-processing tools for Java. Primarily it includes \texttt{ObjectMapper} which can serialize Java objects to JSON (JavaScript Object Notation) and deserialize them back.
+It also supports XML (Extensible Markup Language), YAML (YAML Ain't Markup Language), CSV (Comma-Separated Values), and many other formats.
+Jackson automatically uses public attributes, or rather getters to get values for JSON and and setters to store values received from it.

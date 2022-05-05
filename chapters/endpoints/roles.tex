@@ -1,0 +1,64 @@
+\section{User Roles}
+Endpoints discussed in this section are endpoints concerning \texttt{UserRole}.
+They are implemented in \texttt{UserRoleController}.
+\subsection{List Roles}
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\ 
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of records to return
+        \end{tabularx}
+    \caption{List roles parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/reservation\_requests/\{id\}/roles}
+    \item \textbf{Description}\\
+        Lists \texttt{UserRole}s for reservation request by \texttt{id}.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} ListResponse<UserRole>}
+\end{description}
+\subsection{Add Role}
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\ 
+        \end{tabularx}
+    \caption{Add role parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{Description}\\
+        Creates a new \texttt{UserRole} by request body for reservation request by \texttt{id}.
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[POST]} /api/v1/reservation\_requests/\{id\}/roles}\\
+        \texttt{UserRole}
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}
+\subsection{Delete Role}
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\
+        entityId & PATH & Id of the user/group of role \\
+        \end{tabularx}
+    \caption{Delete role parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{Description}\\
+        Deletes the \texttt{UserRole} by \texttt{entityId} from reservation request by \texttt{id}.
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id\}/roles/\{entityId\}}
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}

@@ -1,0 +1,52 @@
+\section{Reservation Requests}
+\subsection{List Reservation Requests}
+\begin{table}[ht!]
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        resource & QUERY & Filters entries that use given \emph{resource} \\
+        type & QUERY & Filters entries with given \emph{type} \\
+        search & QUERY & Filters entries that contains \emph{search} \\
+        participant\_user\_id & QUERY &  Filters entries that have participant with id \emph{participant\_user\_id} \\
+        user\_id & QUERY & Filters entries that owner's id equals \emph{user\_id} \\
+        interval\_from & QUERY & Filters entries from this date \\  
+        interval\_to & QUERY & Filters entries to this date \\
+        technology & QUERY & Filters entries by given \emph{TechnologyModel} \\
+        parentRequestId & QUERY & Filters entries that have \emph{parentRequestId} \\
+        allocation\_state & QUERY & Filters entries that have \emph{allocation\_state} \\
+        sort & QUERY & Sort entries by \emph{sort} parameter \\
+        sort-desc & QUERY & Sorts entries in descending order if true \\
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of records to return
+        \end{tabularx}
+    \caption{List roles parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/reservation\_requests}
+    \item \textbf{Description}\\
+        Lists \texttt{ReservationRequest}s.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} ListResponse<ReservationRequest>}
+\end{description}
+
+\subsection{Create Reservation Requests}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[POST]} /api/v1/reservation\_requests \texttt{ReservationRequest}}
+    \item \textbf{Description}\\
+        Creates \texttt{ReservationRequest} given in request body.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}
+
+\subsection{Delete Reservation Requests}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id\} \texttt{ReservationRequest}}
+    \item \textbf{Description}\\
+        Creates \texttt{ReservationRequest} given in request body.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}

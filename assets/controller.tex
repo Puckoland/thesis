@@ -1,55 +1,66 @@
 \begin{lstlisting}[language=java, caption=ReservationRequestController.java, label=lst:controller]
+// Makes this path a Controller (auto-detectable) and binds return values of methods to the HTTP request body
 @RestController
+// Binds this controller to the path parameter
 @RequestMapping("/api/v1/reservation_requests")
 public class ReservationRequestController
 {
+    // Controller service used to manage reservations
     private final ReservationService reservationService;
     
+    // @Autowired resolves the service to Bean defined in rest-api-servlet.xml
     public ReservationRequestController(@Autowired ReservationService reservationService)
     {
         this.reservationService = reservationService;
     }
     
+    // Binds this method to the HTTP GET request with path defined in @RequestMapping
     @GetMapping
+    // Method returns ListResponse<ReservationRequestModel> in response body thanks to @RestController annotation
     ListResponse<ReservationRequestModel> listRequests(
+        // Gets security token from request attributes. The token was stored there when AuthFilter processed the request.
         @RequestAttribute(TOKEN) SecurityToken securityToken,
+        // Reads optional request parameter allocation_state and stores it in allocationState variable
         @RequestParam(value = "allocation_state", required = false) AllocationState allocationState,
         ...
     )
     {
+        // Use Controller service to acquire requested data
         ReservationRequestListRequest request = new ReservationRequestListRequest();
         request.setAllocationState(allocationState);
         ...
         ListResponse<ReservationRequestSummary> response = reservationService.listReservationRequests(request);
         ...
+        // Return the acquired data
         return response;
     }
     
+    // Binds this method to the HTTP POST request with path defined in @RequestMapping
     @PostMapping
     void createRequest(
         @RequestAttribute(TOKEN) SecurityToken securityToken,
+        // Reads the request body and deserializes it to the ReservationRequest object
         @RequestBody ReservationRequest request)
     {
         ...
+        // Use Controller service to create reservation according to the requested data
         reservationService.createReservationRequest(
             securityToken, request.toApi());
     }
     
-    @GetMapping("/{id:.+}")
-    ReservationRequestDetailModel getRequest(
-        @RequestAttribute(TOKEN) SecurityToken securityToken,
-        @PathVariable String id)
-    {
-        ReservationRequestSummary summary = cache.getReservationRequestSummary(securityToken, id);
-        ...
-        return new ReservationRequestDetailModel(summary, ...);
-    }
-    
+    // Sets possible HTTP responses
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200"),
+        @ApiResponse(responseCode = "404", description = "Reservation request not found.", content = @Content),
+    })
+    // Binds this method to the HTTP DELETE request with path defined in @RequestMapping concatenated with "/{id:.+}". The ':' marks the start of a regex to be used for the id variable (useful to accept only numbers for example). The regex ".+" is used because shongo-id can include URL key characters like ':' or '-'.
     @DeleteMapping("/{id:.+}")
     void deleteRequest(
         @RequestAttribute(TOKEN) SecurityToken securityToken,
+        // Reads the id variable defined in request path
         @PathVariable String id)
     {
+        // Use Controller service to delete reservation with id defined in path
         reservationService.deleteReservationRequest(
             securityToken, id);
     }

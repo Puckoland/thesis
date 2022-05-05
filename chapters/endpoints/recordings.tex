@@ -1,0 +1,39 @@
+\section{Recordings}
+Endpoints are defined in \texttt{RecordingController}.
+\subsection{/api/v1/reservation\_requests/\{id\}/recordings}
+Returns \texttt{ListResponse} of recordings from specific reservation request.
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\ 
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of records to return \\
+        sort & QUERY & Sort entries by \emph{sort} parameter \\
+        sort-desc & QUERY & Sorts entries in descending order if true \\
+        \bottomrule
+        \end{tabularx}
+    \caption{Parameters table.}
+\end{table}
+% \begin{itemize}
+%     \item \textbf{HTTP method} -- \texttt{GET}
+%     \item \textbf{Parameters}
+%         \begin{table}[h!]
+%         % \centering
+%         \begin{tabularx}{\textwidth}{llX}
+%          \toprule
+%          Name & Type & Description \\
+%          \midrule
+%          id & PATH & Id of the reservation request \\ 
+%          start & QUERY & \emph{Start} the listing from this number \\  
+%          count & QUERY & \emph{Count} of records to return \\
+%          sort & QUERY & Sort entries by \emph{sort} parameter \\
+%          sort-desc & QUERY & Sorts entries in descending order if true
+%         \end{tabularx}
+%         \caption{Parameters table.}
+%         \end{table}
+%     \item \textbf{Returns} -- 
+% \end{itemize}
+\subsection{/api/v1/reservation\_requests/\{id\}/recordings/\{recordingId\}}
