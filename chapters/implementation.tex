@@ -12,7 +12,7 @@ At the start of the \emph{Controller} service, the REST server is attached to th
 The REST server configuration is required before implementing API endpoints. These configuration files are stored in the \texttt{config} sub-package.
 
 \subsection{Configuration File Extension}
-First, the configuration of the REST server itself is essential. The controller configuration file \texttt{shongo-controller.cfg.xml} has been extended with the parameterization for the new code. Thanks to that, Shongo administrators can set the REST API server properties inside the \texttt{<rest-api>} XML element. An example of this new configuration is shown in \Cref{conf}. There are several configurable sub elements:
+First, the configuration of the REST server itself is essential. The controller configuration file \texttt{shongo-controller.cfg.xml} has been extended with the parameterization for the new code. Consequently, Shongo administrators can set the REST API server properties inside the \texttt{<rest-api>} XML element. An example of this new configuration is shown in \Cref{conf}. There are several configurable sub elements:
 \begin{itemize}
     \item \texttt{<host>} -- the host where the REST API shall serve
     \item \texttt{<port>} -- the port where the REST API shall serve
@@ -162,7 +162,7 @@ public class RoomModel {
     ...
 
     // Creates this object from data acquired from Controller service
-    public static RoomModel toApi(ExecutableSummary summary)
+    public static RoomModel fromApi(ExecutableSummary summary)
     {
         RoomModel roomModel = new RoomModel();
         roomModel.setId(summary.getId());
@@ -182,9 +182,9 @@ public class RoomModel {
 
 \section{Error Handling}
 Quite many things can go wrong while processing a request. For this reason, the \texttt{error} sub-package was created for files concerning errors and their handling.
-For exceptional cases, new exceptions were made, such as \texttt{UnsupportedApiException} or \texttt{ObjectInaccessibleException}.
+For extraordinary cases, new exceptions were made, such as \texttt{UnsupportedApiException} or \texttt{ObjectInaccessibleException}.
 These (and any other) exceptions can be thrown during request processing, in which case, the server responds with HTTP response 500 Internal Server Error and prints the \emph{stacktrace} to the HTTP body by default.
-To provide better information for the client, \texttt{GlobalController\-ExceptionHandler} class was implemented, annotated with Spring web annotation \texttt{@RestControllerAdvice}.
+To provide better information for the client, \texttt{GlobalController\-ExceptionHandler} class was implemented and annotated with Spring web annotation \texttt{@RestControllerAdvice}.
 The methods in the class are annotated with \texttt{@ExceptionHandler}, which takes an exception as a parameter. If this exception is thrown, the request processing intercepts and the annotated method runs instead.
 These methods can handle the exception and then respond to the client with the \texttt{ResponseEntity} object. As a result, any object can be passed into the HTTP response body with any HTTP response status code.
 
