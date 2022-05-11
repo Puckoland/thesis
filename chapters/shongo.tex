@@ -55,16 +55,16 @@ These functionalities are made available for other components with the \emph{API
 \subsection{Connector} \label{connector}
 The connector is a component that is responsible for establishing, maintaining and monitoring connections to remote virtual resources (Pexip, H.323 MCU, Adobe connect, Zoom) and utilizing their functionalities. First and foremost, that includes creating virtual meetings and reserving capacity.
 The connector contains implementations of \emph{Device Agent}s, and each \emph{Device Agent} provides a specific device (e.g. Adobe Connect, Pexip) features to the controller using the device’s \emph{API}.
-Moreover, it enables the system to save data from the device to the file system.
+Moreover, it enables the system to save data (screenshots for example) from the device to the local file system.
 
-The controller communicates with the connector using the \emph{JADE} (Java Agent DEvelopment) framework, which enables the connection of multiple connectors to a single controller. This can be done, for example, in order to distribute the load.
+The controller communicates with the connector using the \emph{JADE} (Java Agent DEvelopment) framework, which enables the connection of a single connectors to multiple controllers. This can be done, for example, in order to distribute the load.
 
 \subsection{Authentication Server}
 The authentication server authenticates incoming requests for the controller component, authenticates users, finds users from various identity providers and obtains information about users for the web client.
 Besides that, it also manages the authentication layer of the web conference system Adobe Connect. This layer uses the user's information gained after logging in via system Shibboleth\footnote{Shibboleth, \url{https://www.shibboleth.net/}}.
 
 \subsection{Web Client} \label{webclient}
-The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the controller’s services.
+The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the controller’s services. That results in server-side rendering from typical model-view-controller architecture.
 
 Thanks to this component, users can authenticate via OpenID Connect \footnote{OpenID Connect, \url{https://openid.net/connect/}} and request a reservation of any available resource comfortably via the web browser.
 

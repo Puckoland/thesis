@@ -1,6 +1,7 @@
 \section{Resources}
-Endpoints discussed in this section are endpoints concerning \texttt{Resource}.
-They are implemented in \texttt{ResourcesController}.
+Endpoints discussed in this section are endpoints concerning \texttt{Resource}s.
+They are implemented in \texttt{ResourcesController} and available at \texttt{/api/v1/resources} path.
+
 \subsection{List Roles}
 \begin{table}[ht!]
     \begin{tabularx}{\textwidth}{llX}
@@ -18,7 +19,7 @@ They are implemented in \texttt{ResourcesController}.
     \item \textbf{Description}\\
         Lists all available \texttt{Resource}s.
     \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} \text{[Resource]}}
+        \texttt{\text{[200 OK]} \text{[ResourceModel]}}
 \end{description}
 \subsection{Resource Capacity Utilization}
 \begin{table}[ht!]
@@ -39,7 +40,7 @@ They are implemented in \texttt{ResourcesController}.
     \item \textbf{HTTP request}\\
         \texttt{\text{[GET]} /api/v1/resources/capacity\_utilizations}
     \item \textbf{Description}\\
-        Lists \texttt{CapacityUtilization}s for all \texttt{Resources} in given interval, spited by \emph{unit}.
+        Lists \texttt{CapacityUtilization}s for all \texttt{Resources} in given interval, spited by \emph{unit} time period.
     \item \textbf{Response}\\
         \texttt{\text{[200 OK]} ListResponse<CapacityUtilization>}
 \end{description}

@@ -1,1 +1,16 @@
 \section{Users and Groups}
+The client might need the information about users and groups in the Shongo system.
+These resources are made available via endpoints implemented in \texttt{UserController}.
+
+\subsection{Endpoints}
+\begin{itemize}
+    \item \textbf{/api/v1/users} -- Returns all users that match the \texttt{filter} and query parameter and are part of \texttt{groupId} query parameter.
+    \item \textbf{/api/v1/users/\{userId:.+\}} -- Returns information about a single user. The requested user is defined by the \texttt{userId} path variable.
+    \item \textbf{/api/v1/groups} -- Returns all groups that match the \texttt{filter} query parameter.
+    \item \textbf{/api/v1/users/\{groupId:.+\}} -- Returns information about a single group. The requested group is defined by the \texttt{groupId} path variable.
+    \item \textbf{/api/v1/settings} -- Manages the user's settings. There are 2 available HTTP methods:
+    \begin{description}
+        \item \textbf{GET} -- Returns the user's predefined settings. The user is acquired by \texttt{SecurityToken} from the \texttt{Authorization} HTTP header.
+        \item \textbf{PUT} -- Updates the user's predefined settings to the settings obtained in request body. The user is acquired by \texttt{SecurityToken} from the \texttt{Authorization} HTTP header.
+    \end{description}
+\end{itemize}
