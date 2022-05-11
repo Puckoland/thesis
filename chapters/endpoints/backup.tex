@@ -1,0 +1,239 @@
+\section{Users and Groups}
+The client might need the information about users and groups in the Shongo system.
+These resources are made available via endpoints implemented in \texttt{UserController}.
+
+\subsection{Endpoints}
+\begin{itemize}
+    \item \textbf{/api/v1/users} -- Returns all users that match the \texttt{filter} and query parameter and are part of \texttt{groupId} query parameter.
+    \item \textbf{/api/v1/users/\{userId:.+\}} -- Returns information about a single user. The requested user is defined by the \texttt{userId} path variable.
+    \item \textbf{/api/v1/groups} -- Returns all groups that match the \texttt{filter} query parameter.
+    \item \textbf{/api/v1/users/\{groupId:.+\}} -- Returns information about a single group. The requested group is defined by the \texttt{groupId} path variable.
+    \item \textbf{/api/v1/settings} -- Manages the user's settings. There are 2 available HTTP methods:
+    \begin{description}
+        \item \textbf{GET} -- Returns the user's predefined settings. The user is acquired by \texttt{SecurityToken} from the \texttt{Authorization} HTTP header.
+        \item \textbf{PUT} -- Updates the user's predefined settings to the settings obtained in request body. The user is acquired by \texttt{SecurityToken} from the \texttt{Authorization} HTTP header.
+    \end{description}
+\end{itemize}
+
+
+\section{Recordings}
+Endpoints are defined in \texttt{RecordingController}.
+\subsection{/api/v1/reservation\_requests/\{id\}/recordings}
+Returns \texttt{ListResponse} of recordings from specific reservation request.
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\ 
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of records to return \\
+        sort & QUERY & Sort entries by \emph{sort} parameter \\
+        sort-desc & QUERY & Sorts entries in descending order if true \\
+        \bottomrule
+        \end{tabularx}
+    \caption{Parameters table.}
+\end{table}
+% \begin{itemize}
+%     \item \textbf{HTTP method} -- \texttt{GET}
+%     \item \textbf{Parameters}
+%         \begin{table}[h!]
+%         % \centering
+%         \begin{tabularx}{\textwidth}{llX}
+%          \toprule
+%          Name & Type & Description \\
+%          \midrule
+%          id & PATH & Id of the reservation request \\ 
+%          start & QUERY & \emph{Start} the listing from this number \\  
+%          count & QUERY & \emph{Count} of records to return \\
+%          sort & QUERY & Sort entries by \emph{sort} parameter \\
+%          sort-desc & QUERY & Sorts entries in descending order if true
+%         \end{tabularx}
+%         \caption{Parameters table.}
+%         \end{table}
+%     \item \textbf{Returns} -- 
+% \end{itemize}
+\subsection{/api/v1/reservation\_requests/\{id\}/recordings/\{recordingId\}}
+
+
+\section{Report}
+Endpoints concerning reporting of problem. Stored in \texttt{ReportController}.
+
+\subsection{Report}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[POST]} /api/v1/report \texttt{Report}}
+    \item \textbf{Description}\\
+        Sends \texttt{Report} to configured administrators.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}
+
+
+\section{Reservation Requests}
+\subsection{List Reservation Requests}
+\begin{table}[ht!]
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        resource & QUERY & Filters entries that use given \emph{resource} \\
+        type & QUERY & Filters entries with given \emph{type} \\
+        search & QUERY & Filters entries that contains \emph{search} \\
+        participant\_user\_id & QUERY &  Filters entries that have participant with id \emph{participant\_user\_id} \\
+        user\_id & QUERY & Filters entries that owner's id equals \emph{user\_id} \\
+        interval\_from & QUERY & Filters entries from this date \\  
+        interval\_to & QUERY & Filters entries to this date \\
+        technology & QUERY & Filters entries by given \emph{TechnologyModel} \\
+        parentRequestId & QUERY & Filters entries that have \emph{parentRequestId} \\
+        allocation\_state & QUERY & Filters entries that have \emph{allocation\_state} \\
+        sort & QUERY & Sort entries by \emph{sort} parameter \\
+        sort-desc & QUERY & Sorts entries in descending order if true \\
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of records to return
+        \end{tabularx}
+    \caption{List roles parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/reservation\_requests}
+    \item \textbf{Description}\\
+        Lists \texttt{ReservationRequest}s.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} ListResponse<ReservationRequest>}
+\end{description}
+
+\subsection{Create Reservation Requests}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[POST]} /api/v1/reservation\_requests \texttt{ReservationRequest}}
+    \item \textbf{Description}\\
+        Creates \texttt{ReservationRequest} given in request body.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}
+
+\subsection{Delete Reservation Requests}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id\} \texttt{ReservationRequest}}
+    \item \textbf{Description}\\
+        Creates \texttt{ReservationRequest} given in request body.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}
+
+
+\section{Resources}
+Endpoints discussed in this section are endpoints concerning \texttt{Resource}.
+They are implemented in \texttt{ResourcesController} and available at \texttt{/api/v1/resources} path.
+\subsection{List Roles}
+\begin{table}[ht!]
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        technology & QUERY & Filters resources by given \emph{TechnologyModel} \\  
+        tag & QUERY & Filters resources by given \emph{tag}
+        \end{tabularx}
+    \caption{List resources parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/resources}
+    \item \textbf{Description}\\
+        Lists all available \texttt{Resource}s.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} \text{[Resource]}}
+\end{description}
+\subsection{Resource Capacity Utilization}
+\begin{table}[ht!]
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        interval\_from & QUERY & Computes interval from this date \\  
+        interval\_to & QUERY & Computes interval to this date \\
+        unit & QUERY & Divides interval into chunks as big as the \emph{unit} states \\
+        refresh & QUERY & Forces refresh of utilization computation if \emph{true} \\
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of items to return
+        \end{tabularx}
+    \caption{Resource utilization parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/resources/capacity\_utilizations}
+    \item \textbf{Description}\\
+        Lists \texttt{CapacityUtilization}s for all \texttt{Resources} in given interval, spited by \emph{unit}.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} ListResponse<CapacityUtilization>}
+\end{description}
+
+
+\section{User Roles}
+Endpoints discussed in this section are endpoints concerning \texttt{UserRole}.
+They are implemented in \texttt{UserRoleController}.
+\subsection{List Roles}
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\ 
+        start & QUERY & \emph{Start} the listing from this number \\  
+        count & QUERY & \emph{Count} of records to return
+        \end{tabularx}
+    \caption{List roles parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[GET]} /api/v1/reservation\_requests/\{id\}/roles}
+    \item \textbf{Description}\\
+        Lists \texttt{UserRole}s for reservation request by \texttt{id}.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]} ListResponse<UserRole>}
+\end{description}
+\subsection{Add Role}
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\ 
+        \end{tabularx}
+    \caption{Add role parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[POST]} /api/v1/reservation\_requests/\{id\}/roles}\\
+        \texttt{UserRole}
+    \item \textbf{Description}\\
+        Creates a new \texttt{UserRole} by request body for reservation request by \texttt{id}.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}
+\subsection{Delete Role}
+\begin{table}[ht!]
+    % \centering
+    \begin{tabularx}{\textwidth}{llX}
+        \toprule
+        Name & Type & Description \\
+        \midrule
+        id & PATH & Id of the reservation request \\
+        entityId & PATH & Id of the user/group of role \\
+        \end{tabularx}
+    \caption{Delete role parameters table.}
+\end{table}
+\begin{description}
+    \item \textbf{HTTP request}\\
+        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id\}/roles/\{entityId\}}
+    \item \textbf{Description}\\
+        Deletes the \texttt{UserRole} by \texttt{entityId} from reservation request by \texttt{id}.
+    \item \textbf{Response}\\
+        \texttt{\text{[200 OK]}}
+\end{description}
+

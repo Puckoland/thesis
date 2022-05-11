@@ -1,4 +1,4 @@
-\chapter{Implementation}
+\chapter{Implementation} \label{cha:implementation}
 All classes related to the REST API are stored in the Controller’s package  \texttt{cz.cesnet.shongo.controller.rest}.
 Aside from this package, the only changes made are in a few files that retrieve data from the database --- where additional data were required to be loaded --- and inter-domain implementation files\cite{pavelka2016shongo} whose configuration has been merged with the REST configuration.
 
@@ -16,7 +16,7 @@ First, the configuration of the REST server itself is essential. The controller 
 \begin{itemize}
     \item \texttt{<host>} -- the host where the REST API shall serve
     \item \texttt{<port>} -- the port where the REST API shall serve
-    \item \texttt{<ssl-key-store>} -- the SSL (Secure Socket Layer) key store
+    \item \texttt{<ssl-key-store>} -- the SSL (Secure Socket Layer) key store from inter-domain extension \cite{pavelka2016shongo}
     \item \texttt{<ssl-key-store-type>} -- the type of key store
     \item \texttt{<ssl-key-store-password>} -- the password for key store
 \end{itemize}
@@ -53,10 +53,10 @@ Additionally, \texttt{AuthFilter} is added, which serves as a REST API middlewar
 If the token is not present or is invalid, the server responds with an HTTP \emph{401 UNAUTHORIZED} response code.
 
 \subsection{OpenAPI and Swagger}
-The \hyperref[sec:openapi]{OpenAPI} specification is generated using Springdoc from the \hyperref[sec:spring]{Spring framework}, so the users can have general and straightforward API documentation available to them.
+The OpenAPI (\Cref{sec:openapi}) specification is generated using Springdoc from the Spring framework (\Cref{sec:spring}), so the users can have general and straightforward API documentation available to them.
 For this purpose, the \emph{springdoc-openapi} dependency was added to \emph{Controller}'s \texttt{pom.xml}, and the \texttt{OpenApiConfig} class was created. In this configuration file, Springdoc dependencies were imported using Spring's \emph{@Import}, global API attributes were defined with \texttt{@OpenAPIDefinition}, and security was defined with \texttt{@SecurityScheme} annotation.
-This is shown in \Cref{lst:openapi}.
-\begin{lstlisting}[language=Java, caption=OpenApiConfig.java, label=lst:openapi]
+This is shown in \Cref{lst:openapiconf}.
+\begin{lstlisting}[language=Java, caption=OpenApiConfig.java, label=lst:openapiconf]
 @Configuration
 @EnableWebMvc
 @OpenAPIDefinition(
@@ -84,8 +84,8 @@ class OpenApiConfig implements WebMvcConfigurer {
 Springdoc generates OpenAPI specification based on Spring web annotations by default, but Springdoc annotations such as \texttt{@Operation} or \texttt{@ApiResponses} can customize the resulting specification.
 The resulting OpenAPI file is added to the REST server and is available at the \texttt{/v3/open-api} path. \cite{springdoc}
 
-The \hyperref[sec:swagger]{Swagger UI} is then used for user-friendly visualization of the documentation mentioned above.
-The user interface (web site) is acquired and saved in the project resources using the same \emph{springdoc-openapi} dependency as for OpenAPI specification. After that, the default OpenAPI path is modified from \texttt{https://\-petstore.swagger.io\-/v2/swagger\-.json} to \texttt{/v3/open-api}. Finally, we add these resources to the REST API server and make them available at the  \texttt{/swagger-ui/index.html} path.
+The Swagger UI (\Cref{sec:swagger}) is then used for user-friendly visualization of the documentation mentioned above.
+The user interface (web site) is acquired and saved in the project resources using the same \emph{springdoc-openapi} dependency as for OpenAPI specification. After that, the default OpenAPI path is modified from \texttt{https://\-petstore.swagger.io\-/v2/swagger\-.json} to \texttt{/v3/open-api}. Finally, these resources are added to the REST API server and made available at the \texttt{/swagger-ui/index.html} path.
 
 \section{REST Controllers}
 This section uses information from Spring documentation \cite{springdocumentation}.
@@ -136,7 +136,7 @@ In addition, the methods can retrieve HTTP request attributes annotated with \te
 \input{assets/controller}
 
 \section{Data Models}
-Model classes are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. The models are stored in the \texttt{models} sub-package. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the \hyperref[sec:lombok]{project Lombok}.
+Model classes are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. The models are stored in the \texttt{models} sub-package. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the project Lombok (\Cref{sec:lombok}).
 \emph{Jackson} can then serialize and deserialize these classes as described in \Cref{sec:jackson}. Attributes not eligible for serialization are annotated with \texttt{@JacksonIgnore} and for custom name of field in serialized object \texttt{@JacksonProperty("field\_name")} is used.
 That does not mean that these classes cannot include anything else. Most importantly, they usually also contain \texttt{fromApi()} and \texttt{toApi()} methods which serve as converters from and to Controller API objects.
 
