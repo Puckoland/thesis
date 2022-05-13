@@ -1,68 +1,9 @@
 \section{Resources}
-Endpoints discussed in this section are endpoints concerning \texttt{Resource}s.
-They are implemented in \texttt{ResourcesController} and available at \texttt{/api/v1/resources} path.
-
-\subsection{List Roles}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/resources}
-    \item \textbf{Description}\\
-        Lists all available \texttt{Resource}s.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} \text{[ResourceModel]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        technology & QUERY & Filters resources by given \emph{TechnologyModel} \\  
-        tag & QUERY & Filters resources by given \emph{tag}
-        \end{tabularx}
-    \caption{List resources parameters table.}
-\end{table}
-
-\subsection{Resource Capacity Utilization}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/resources/capacity\_utilizations}
-    \item \textbf{Description}\\
-        Lists \texttt{ResourceUtilizationModel}s for all \texttt{Resources} in given interval, spited by \emph{unit} time period.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} ListResponse<ResourceUtilizationModel>}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        interval\_from & QUERY & Computes interval from this date \\  
-        interval\_to & QUERY & Computes interval to this date \\
-        unit & QUERY & Divides interval into chunks as big as the \emph{unit} states \\
-        refresh & QUERY & Forces refresh of utilization computation if \emph{true} \\
-        start & QUERY & \emph{Start} the listing from this number \\  
-        count & QUERY & \emph{Count} of items to return
-        \end{tabularx}
-    \caption{Resource utilization parameters table.}
-\end{table}
-
-\subsection{Resource Capacity Utilization Detail}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/resources/{id}/capacity\_utilizations}
-    \item \textbf{Description}\\
-        Returns \texttt{ResourceUtilizationDetailModel} for the \texttt{Resource} with given id in given interval.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} ResourceUtilizationDetailModel}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of resource \\
-        interval\_from & QUERY & Computes interval from this date \\  
-        interval\_to & QUERY & Computes interval to this date \\
-        \end{tabularx}
-    \caption{Resource utilization parameters table.}
-\end{table}
+The client might also need information concerning \texttt{Resource}s. He might need information about what resources are available and how much these resources are used.
+To achieve that, the client can use the endpoints implemented in \texttt{ResourcesController}.
+The available endpoints include:
+\begin{itemize}
+    \item \textbf{[GET] /api/v1/resources} -- Returns all available resources (\texttt{List\-<ResourceModel>}) that users can reserve. The \texttt{technology} (\texttt{TechnologyModel}) and \texttt{tag} query parameters can filter the requested resources.
+    \item \textbf{[GET] /api/v1/resources/capacity\_utilization} -- Returns utilization of all resources (\texttt{ListResponse<ResourceUtilizationModel>}) in interval specified by \texttt{interval\_from} and \texttt{interval\_to} query parameters. Also, a requested period can be specified by the \texttt{unit} (\texttt{Unit}) query parameter.
+    \item \textbf{[GET] /api/v1/resources/\{id\}/capacity\_utilization} -- Returns detailed utilization information (\texttt{ResourceUtilizationDetailModel}) about a resource specified by \texttt{id} path parameter. The detail contains additional information about reservations that used the resource in the specified interval, thus utilizing the resource.
+\end{itemize}

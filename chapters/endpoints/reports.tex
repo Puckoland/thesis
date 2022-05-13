@@ -1,12 +1,5 @@
 \section{Report}
-Endpoints concerning reporting of problem. They are stored in \texttt{ReportController}.
-
-\subsection{Send Report}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[POST]} /api/v1/report \texttt{ReportModel}}
-    \item \textbf{Description}\\
-        Sends the \texttt{ReportModel} to administrators configured in Controller's configuration file.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
+The users might run into a problem. That is where the \texttt{ReportController} comes in to inform the administrators about the problem. At the moment of writing this thesis, there is only one endpoint:
+\begin{itemize}
+    \item \textbf{\text{[POST]} /api/v1/report} -- Sends the \texttt{ReportModel} acquired from the request body to the system administrators configured in Controller's configuration.
+\end{itemize}

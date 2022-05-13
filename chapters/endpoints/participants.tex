@@ -1,87 +1,15 @@
 \section{Participants}
-The endpoints discussed in this section concern the participants. They are defined in \texttt{ParticipantController}.
-
-\subsection{List Participants}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/reservation\_requests/\{id:.+\}/participants}
-    \item \textbf{Description}\\
-        Returns \texttt{ListResponse} of participants from reservation request specified by \texttt{id} parameter.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} ListResponse<ParticipantModel>}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request \\
-        start & QUERY & \emph{Start} the listing from this number \\  
-        count & QUERY & \emph{Count} of records to return \\
-        \bottomrule
-        \end{tabularx}
-    \caption{List participants parameters table.}
-\end{table}
-
-\subsection{Create Participant}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[POST]} /api/v1/reservation\_requests/\{id:.+\}/participants}
-    \item \textbf{Description}\\
-        Adds \texttt{ParticipantModel} from request body to reservation request specified by \texttt{id} parameter.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Create participant parameters table.}
-\end{table}
-
-\subsection{Edit Participant}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[PUT]} /api/v1/reservation\_requests/\{id:.+\}\\
-        /participants/{participantId:.+} ParticipantModel}
-    \item \textbf{Description}\\
-        Replaces \texttt{ParticipantModel} with \texttt{participantId} by \texttt{ParticipantModel} from request body.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request \\
-        participantId & PATH & id of participant to edit \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Edit participant parameters table.}
-\end{table}
-
-\subsection{Delete Participant}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id:.+\}/participants/{participantId:.+}}
-    \item \textbf{Description}\\
-        Deletes \texttt{ParticipantModel} with \texttt{participantId} from reservation request specified by \texttt{id} parameter.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request \\
-        participantId & PATH & id of participant to delete \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Delete participant parameters table.}
-\end{table}
+If a client wants to adjust the users or groups that can participate in reserved meetings, he could use the endpoints defined in  \texttt{Participant\-Controller}.
+The available endpoints include:
+\begin{itemize}
+    \item \textbf{/api/v1/reservation\_requests/\{id:.+\}/participants} -- Manages participants configured for reservation request specified by \texttt{id} path parameter. There are two possible HTTP methods:
+    \begin{description}
+        \item \textbf{[GET]} -- Returns all participants (\texttt{ListResponse<Participant\-Model>}) that are configured for the reservation request specified by the \texttt{id} parameter.
+        \item \textbf{[POST]} -- Creates a new participant defined by \texttt{ParticipantModel} acquired from the request body for the specified reservation request.
+    \end{description}
+    \item \textbf{/api/v1/reservation\_requests/\{id:.+\}/participants/\{participantId:.+\}} -- Manages the participant specified by \texttt{participantId} path parameter that is already configured for reservation request specified by \texttt{id} path parameter. There are two available HTTP methods:
+    \begin{description}
+        \item \textbf{[PUT]} -- Updates the existing participant's role with the participant role defined by the \texttt{role} (\texttt{ParticipantRole}) query parameter.
+        \item \textbf{[DELETE]} -- Deletes the participant from the reservation request configuration.
+    \end{description}
+\end{itemize}

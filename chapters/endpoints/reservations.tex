@@ -1,14 +1,26 @@
 \section{Reservation Requests}
-\subsection{List Reservation Requests}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/reservation\_requests}
-    \item \textbf{Description}\\
-        Lists \texttt{ReservationRequest}s.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} ListResponse<ReservationRequest>}
-\end{description}
-\begin{table}[ht!]
+The following endpoints are the most important since they manage the central part of the Shongo system --- reservation requests.
+The available endpoints include:
+\begin{itemize}
+    \item \textbf{/api/v1/reservation\_requests} -- Manages the reservation requests. There are two available HTTP methods:
+    \begin{description}
+        \item \textbf{[GET]} -- Returns all reservation requests (\texttt{ListResponse<Reser\-vationRequestModel>}). However, they can be filtered by many query parameters closely described in \Cref{tab:res}.
+        \item \textbf{[POST]} -- Creates a new reservation request defined by \texttt{Reser\-vationRequestCreateModel} acquired from the request body.
+    \end{description}
+    \item \textbf{/api/v1/reservation\_requests/\{id:.+\}} -- Manages the reservation request specified by \texttt{id} path parameter. There are two available HTTP methods:
+    \begin{description}
+        \item \textbf{[GET]} -- Returns detailed information about the reservation request (\texttt{ReservationRequestDetailModel}). It contains additional information about the current state of the reservation request, its authorized data (\texttt{RoomAuthorizedData}) holding access pins and aliases, and the history of the reservation request (\texttt{List<ReservationRequestHistoryModel>}) holding information about how the request changed over the time.
+        \item \textbf{[PATCH]} -- Modifies the reservation request with parameters specified by \texttt{ReservationRequestCreateModel} acquired from the request body.
+        \item \textbf{[DELETE]} -- Deletes the reservation request.
+    \end{description}
+    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/accept} -- The resource owner or administrator can use this endpoint to accept the reservation request awaiting confirmation, so it becomes ready for allocation and eventually a reservation.
+    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/reject} -- The resource owner or administrator can use this endpoint to reject the reservation request awaiting confirmation.
+    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/reject} -- Reverts the modifications of the reservation request.
+\end{itemize}
+
+
+\begin{table}[H]
+    \label{tab:res}
     \begin{tabularx}{\textwidth}{llX}
         \toprule
         Name & Type & Description \\
@@ -23,152 +35,7 @@
         technology & QUERY & Filters entries by given \emph{TechnologyModel} \\
         parentRequestId & QUERY & Filters entries that have \emph{parentRequestId} \\
         allocation\_state & QUERY & Filters entries that have \emph{allocation\_state} \\
-        sort & QUERY & Sort entries by \emph{sort} parameter \\
-        sort-desc & QUERY & Sorts entries in descending order if true \\
-        start & QUERY & \emph{Start} the listing from this number \\  
-        count & QUERY & \emph{Count} of records to return \\
         \bottomrule
-        \end{tabularx}
+    \end{tabularx}
     \caption{List reservation requests parameters table.}
-\end{table}
-
-\subsection{Create Reservation Request}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[POST]} /api/v1/reservation\_requests\\
-        ReservationRequestCreateModel}
-    \item \textbf{Description}\\
-        Creates \texttt{ReservationRequest} given in request body.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-
-\subsection{Detail Reservation Requests}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/reservation\_requests/\{id\}}
-    \item \textbf{Description}\\
-        Returns detail about reservation request with given id.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} ReservationRequestDetailModel}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Detail reservation request parameters.}
-\end{table}
-
-\subsection{Edit Reservation Requests}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[PATCH]} /api/v1/reservation\_requests/\{id\}\\ ReservationRequestCreateModel}
-    \item \textbf{Description}\\
-        Edits the reservation request with given id to non empty parameters acquired from request body.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request to edit \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Edit reservation request parameters.}
-\end{table}
-
-\subsection{Delete Reservation Request}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id\} \texttt{ReservationRequest}}
-    \item \textbf{Description}\\
-        Deletes \texttt{ReservationRequest} with given id.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & Delete the reservation request with this id \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Delete reservation request parameters.}
-\end{table}
-
-\subsection{Delete Multiple Reservation Requests}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id\} \texttt{List<String>}}
-    \item \textbf{Description}\\
-        Deletes \texttt{ReservationRequest}s with ids acquired from request body.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-
-\subsection{Accept Reservation Requests}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[POST]} /api/v1/reservation\_requests/\{id\}}
-    \item \textbf{Description}\\
-        Accepts the reservation request with given id.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request to accept \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Accept reservation request parameters.}
-\end{table}
-
-\subsection{Reject Reservation Requests}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[POST]} /api/v1/reservation\_requests/\{id\}}
-    \item \textbf{Description}\\
-        Rejects the reservation request with given id.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request to reject \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Reject reservation request parameters.}
-\end{table}
-
-\subsection{Revert Reservation Requests}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[POST]} /api/v1/reservation\_requests/\{id\}}
-    \item \textbf{Description}\\
-        Reverts the reservation request with given id to previous settings.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & id of reservation request to revert \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Revert reservation request parameters.}
 \end{table}

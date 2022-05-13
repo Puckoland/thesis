@@ -1,48 +1,6 @@
 \section{Recordings}
-The endpoints discussed in this section concern the reservation recordings. They are defined in \texttt{RecordingController}.
-
-\subsection{List Recordings}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/reservation\_requests/\{id\}/recordings}
-    \item \textbf{Description}\\
-        Returns \texttt{ListResponse} of recordings from reservation request specified by \texttt{id} parameter.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} ListResponse<RecordingModel>}
-\end{description}
-\begin{table}[ht!]
-    % \centering
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & Id of the reservation request \\ 
-        start & QUERY & \emph{Start} the listing from this number \\  
-        count & QUERY & \emph{Count} of records to return \\
-        sort & QUERY & Sort entries by \emph{sort} parameter \\
-        sort-desc & QUERY & Sorts entries in descending order if true \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Parameters table.}
-\end{table}
-\subsection{Delete Recording}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[DELETE]} /api/v1/reservation\_requests/\{id\}\\/recordings/\{recordingId\}}
-    \item \textbf{Description}\\
-        Deletes the recording with \texttt{recordingId} from reservation request specified by \texttt{id} parameter.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]}}
-\end{description}
-\begin{table}[ht!]
-    % \centering
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & Id of the reservation request \\ 
-        recordingId & PATH & Id of the recording to delete \\
-        \bottomrule
-        \end{tabularx}
-    \caption{Parameters table.}
-\end{table}
+As described in \Cref{cha:shongo}, the virtual meetings can be recorded. The available recordings can be managed using the endpoints implemented in \texttt{RecordingController}. The available endpoints include:
+\begin{itemize}
+    \item \textbf{[GET] /api/v1/reservation\_requests/\{id\}/recordings} -- Returns all re\-cordings (\texttt{ListResponse<RecordingModel>}) of reservation request specified by \texttt{id} path parameter.
+    \item \textbf{[DELETE] /api/v1/reservation\_requests/\{id\}/recordings/\{recordingId:.+\}} -- Deletes the recording specified by \texttt{recordingId} path parameter from reservation request specified by \texttt{id} parameter.
+\end{itemize}

@@ -55,41 +55,6 @@ Additionally, \texttt{AuthFilter} is added, which serves as a REST API middlewar
 \end{enumerate}
 If the token is not present or is invalid, the server responds with an HTTP \emph{401 UNAUTHORIZED} response code.
 
-\subsection{OpenAPI and Swagger}
-The OpenAPI (\Cref{sec:openapi}) specification is generated using Springdoc from the Spring framework (\Cref{sec:spring}), so the users can have general and straightforward API documentation available to them.
-For this purpose, the \emph{springdoc-openapi} dependency was added to \emph{Controller}'s \texttt{pom.xml}, and the \texttt{OpenApiConfig} class was created. In this configuration file, Springdoc dependencies were imported using Spring's \emph{@Import}, global API attributes were defined with \texttt{@OpenAPIDefinition}, and security was defined with \texttt{@SecurityScheme} annotation.
-This is shown in \Cref{lst:openapiconf}.
-\begin{lstlisting}[language=Java, caption=OpenApiConfig.java, label=lst:openapiconf]
-@Configuration
-@EnableWebMvc
-@OpenAPIDefinition(
-        info = @Info(title = "Shongo API", version = "v1"),
-        security = @SecurityRequirement(name = "bearerAuth")
-)
-@SecurityScheme(
-        name = "bearerAuth",
-        type = SecuritySchemeType.HTTP,
-        scheme = "bearer"
-)
-@ComponentScan(basePackages = {"org.springdoc"})
-@Import({
-        SpringDocConfiguration.class,
-        SpringDocWebMvcConfiguration.class,
-        SwaggerConfig.class,
-        SwaggerUiConfigProperties.class,
-        SwaggerUiOAuthProperties.class,
-        JacksonAutoConfiguration.class
-})
-class OpenApiConfig implements WebMvcConfigurer {
-    ...
-}
-\end{lstlisting}
-Springdoc generates OpenAPI specification based on Spring web annotations by default, but Springdoc annotations such as \texttt{@Operation} or \texttt{@ApiResponses} can customize the resulting specification.
-The resulting OpenAPI file is added to the REST server and is available at the \texttt{/v3/open-api} path. \cite{springdoc}
-
-The Swagger UI (\Cref{sec:swagger}) is then used for user-friendly visualization of the documentation mentioned above.
-The user interface (web site) is acquired and saved in the project resources using the same \emph{springdoc-openapi} dependency as for OpenAPI specification. After that, the default OpenAPI path is modified from \texttt{https://\-petstore.swagger.io\-/v2/swagger\-.json} to \texttt{/v3/open-api}. Finally, these resources are added to the REST API server and made available at the \texttt{/swagger-ui/index.html} path.
-
 \section{REST Controllers}
 This section uses information from Spring documentation \cite{springdocumentation}.
 The REST Controllers are responsible for operating the API endpoints and are stored in the \texttt{controllers} sub-package. An example of such a Controller can be observed in \Cref{lst:controller}.
@@ -203,7 +168,44 @@ public class GlobalControllerExceptionHandler
 }
 \end{lstlisting}
 
+
 \section{Miscellaneous}
 The \texttt{ClientWebUrl} class holds the String constants for the endpoints paths. All REST API endpoints paths have the default prefix --- \texttt{/api/v1}.
 
 \texttt{Cache} and \texttt{CacheProvider} classes supply a simple \emph{cache} for several frequently retrieved entities represented by \texttt{ExpirationMap}, which stores the requested entities for a determined amount of time, so the REST API does not have to wait for a much slower database after each request.
+
+
+\section{Documentation}
+The OpenAPI (\Cref{sec:openapi}) specification of the just described implementation of REST API is generated using \texttt{Springdoc} from the Spring framework (\Cref{sec:spring}), so the users can have general and straightforward API documentation available to them.
+For this purpose, the \emph{springdoc-openapi} dependency was added to \emph{Controller}'s \texttt{pom.xml}, and the \texttt{OpenApiConfig} class was created. In this configuration file, Springdoc dependencies were imported using Spring's \emph{@Import}, global API attributes were defined with \texttt{@OpenAPIDefinition}, and security was defined with \texttt{@SecurityScheme} annotation.
+This is shown in \Cref{lst:openapiconf}.
+\begin{lstlisting}[language=Java, caption=OpenApiConfig.java, label=lst:openapiconf]
+@Configuration
+@EnableWebMvc
+@OpenAPIDefinition(
+        info = @Info(title = "Shongo API", version = "v1"),
+        security = @SecurityRequirement(name = "bearerAuth")
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer"
+)
+@ComponentScan(basePackages = {"org.springdoc"})
+@Import({
+        SpringDocConfiguration.class,
+        SpringDocWebMvcConfiguration.class,
+        SwaggerConfig.class,
+        SwaggerUiConfigProperties.class,
+        SwaggerUiOAuthProperties.class,
+        JacksonAutoConfiguration.class
+})
+class OpenApiConfig implements WebMvcConfigurer {
+    ...
+}
+\end{lstlisting}
+Springdoc generates OpenAPI specification based on Spring web annotations by default, but Springdoc annotations such as \texttt{@Operation} or \texttt{@ApiResponses} can customize the resulting specification.
+The resulting OpenAPI file is added to the REST server and is available at the \texttt{/v3/open-api} path \cite{springdoc}.
+
+The Swagger UI (\Cref{sec:swagger}) is then used for user-friendly visualization of the OpenAPI specification mentioned above.
+The user interface (web site) is acquired and saved in the project resources using the same \emph{springdoc-openapi} dependency as for OpenAPI specification. After that, the default OpenAPI path is modified from \texttt{https://\-petstore.swagger.io\-/v2/swagger\-.json} to \texttt{/v3/open-api}. Finally, these resources are added to the REST API server and made available at the \texttt{/swagger-ui/index.html} path.

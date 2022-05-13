@@ -1,17 +1,17 @@
-\chapter{Used Technologies}
+\chapter{Used Technologies} \label{cha:technologies}
 This chapter will introduce the technologies used to implement the REST API for the Shongo system.
 
 
 \section{Representational State Transfer} \label{rest}
-Representational State Transfer or \texttt{REST} is an architectural style for distributed hypermedia systems. \citeauthor{fielding2000rest} introduced the REST first time in \citeyear{fielding2000rest}. \cite{fielding2000rest}
+Representational State Transfer or \texttt{REST} is an architectural style for distributed hypermedia systems. \citeauthor{fielding2000rest} introduced the REST first time in \citeyear{fielding2000rest} \cite{fielding2000rest}.
 \subsection{REST design principles}
 Unlike other API designs such as XML-RPC or SOAP, REST APIs support any format for communication. However, rules have to be followed so the API can be \emph{RESTful}.
 
 These rules are called REST design principles --- also known as architectural constraints \cite{ibmrest}:
 \begin{enumerate}
     \item \textbf{Uniform interface} -- All API requests for the same resource should have the same form disregarding the request origin. The same piece of data, such as the name or email, belongs to one uniform URI (uniform resource identifier).
-    \item \textbf{Client-server decoupling} -- The client and server sides of the application should be completely independent of each other. The client should have only one piece of information — the URI of the requested resource. Meaning it cannot interact with the server in any different ways. Analogically, the server should not affect the client in any other way than passing requested data to it.
-    \item \textbf{Statelessness} -- Each request includes all the information needed. Meaning that server is not allowed to store any data related to the request, and there are no server-side sessions.
+    \item \textbf{Client-server decoupling} -- The client and server sides of the application should be completely independent of each other. The client should have only one piece of information — the URI of the requested resource. This rule implies that the client cannot interact with the server in any different ways. Analogically, the server should not affect the client in any other way than passing requested data to it.
+    \item \textbf{Statelessness} -- Each request includes all the information needed. In other words, the server is not allowed to store any data related to the request, and there are no server-side sessions.
     \item \textbf{Cacheability} -- As low as possible, requests should be made to reduce traffic and improve performance, so as many as possible resources should be cacheable. The server should also inform the client whether the given data in the response is suitable for caching.
     \item \textbf{Layered system architecture} -- Requests and responses can go through many layers on their way. There may be several different intermediaries in the communication. As a result, neither the server nor the client can assume they are communicating directly with the application or with an intermediary.
     \item \textbf{Code on demand (optional)} -- In some cases, the response can be executable code (Java applets, for example). In these cases, the code should only run on-demand.
@@ -32,20 +32,20 @@ Jackson automatically uses public attributes, or rather getters, to serialize va
 
 
 \section{Spring Framework} \label{sec:spring}
-The Spring is the most popular framework for Java applications that offers a \emph{context} for the application.
+The most popular framework for Java applications is the Spring, which offers a context for the application.
 First of all, the framework starts a container (Spring application context) that manages the application components --- also known as \emph{Beans} --- and wires them together so they can use each other. This wiring is achieved by \emph{dependency injection}.
-The components do not create and maintain different features they depend upon; instead, they rely on a separate entity (Spring application) to manage the dependent modules and inject them into components that need them. \cite{walls2022spring}
+The components do not create and maintain different features they depend upon; instead, they rely on a separate entity (Spring application) to manage the dependent modules and inject them into components that need them \cite{walls2022spring}.
 
 The Shongo system is written in Java and the Spring framework features were used for quicker and simpler development of the system. TODO how?
 
 The Spring framework also supports REST API implementation, and this work fully utilizes this feature.
-Spring uses embedded \texttt{ObjectMapper} from Jackson library (\Cref{sec:jackson}) internally to serialize and deserialize foreign formats (mainly JSON) to Java objects automatically. The \texttt{ObjectMapper} is very useful when dealing with HTTP requests which usually use JSON for object formatting. Thanks to this, an API developer can easily use simple model objects to acquire or provide data to the client via HTTP communication.
+Spring uses embedded \texttt{ObjectMapper} from Jackson library (\Cref{sec:jackson}) internally to serialize and deserialize foreign formats (mainly JSON) to Java objects automatically. The \texttt{ObjectMapper} is very useful when dealing with HTTP requests which usually use JSON for object formatting. Thanks to this feature, an API developer can easily use simple model objects to acquire or provide data to the client via HTTP communication.
 This usage will be discussed further in \Cref{cha:implementation}.
 
 
 \section{Project Lombok} \label{sec:lombok}
 Lombok is an open-source Java library that generates frequently used Java code using simple annotations like \texttt{@Getter}, \texttt{@Setter}, \texttt{@Data} or \texttt{@Builder}.
-To give just a taste of what is possible with Lombok, compare the entirely equivalent \Cref{lst:vanilla} and \Cref{lst:lombok}. \cite{lombok}
+The entirely equivalent \Cref{lst:vanilla} and \Cref{lst:lombok} are presented below to show an example of what is possible with Lombok~\cite{lombok}.
 \begin{lstlisting}[language=Java, caption=Vanilla Java, label=lst:vanilla]
 public class DataExample {
   private final String name;
@@ -94,8 +94,8 @@ For these qualities, the Postman was used in the early stages for testing the de
 
 \section{OpenAPI Specification} \label{sec:openapi}
 The OpenAPI Specification (OAS) defines a standard interface to RESTful APIs, allowing humans and computers to understand the API’s capabilities without access to source code or documentation. When properly defined, a consumer can understand and interact with the remote service with minimal implementation logic.
-Documentation generation tools can then use an OpenAPI definition to display the API, code generation tools to generate servers and clients in various programming languages, testing tools, and many other use cases.
-\cite{openapi}
+Documentation generation tools can then use an OpenAPI definition to display the API, code generation tools to generate servers and clients in various programming languages, testing tools, and many other use-cases \cite{openapi}.
+
 The OAS can define endpoints, a data format and schemas for objects passed between server and client, and security specifications that make the access to the API stricter.
 The example of OAS is shown in \Cref{lst:openapi}.
 \begin{lstlisting}[language=Java, caption=OpenAPI.json, label=lst:openapi]
@@ -130,5 +130,5 @@ The example of OAS is shown in \Cref{lst:openapi}.
 \end{lstlisting}
 
 \section{Swagger UI} \label{sec:swagger}
-Swagger UI enables anyone to visualize and interact with the API’s resources. It can be automatically generated from OpenAPI Specification, resulting in user-friendly visual documentation. \cite{swagger}
+Swagger UI enables anyone to visualize and interact with the API’s resources. It can be automatically generated from OpenAPI Specification, resulting in user-friendly visual documentation \cite{swagger}.
 \scalegraphics{assets/swagger.png}{Swagger UI}{swagger}

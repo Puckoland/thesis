@@ -1,8 +1,8 @@
-\chapter{Final Api}
-This chapter describes the final REST API implemented for the Shongo system. The full generated (OpenAPI) documentation is available in \Cref{ape:documentation}.
+\chapter{Final Api} \label{cha:api}
+This chapter describes the final REST API implemented for the Shongo system. The complete generated (OpenAPI) documentation is available in \Cref{ape:documentation}.
 
-Most of the list endpoints return data in \texttt{ListResponse<Model>} format. This is done so the pagination is possible for the resources that have many records. The example is shown in \Cref{lst:listresponse}. The \texttt{start} attribute represents the index of the first record in \texttt{items} list. Finally, the \texttt{count} attribute informs the receiver about how many records are actually available in total.
-These endpoints also accept the \texttt{start} and \texttt{count} query parameters, that set the requested \emph{start} and \emph{number} of items in \texttt{ListResponse}. 
+Most of the list endpoints return data in \texttt{ListResponse<Model>} format. This is done so the pagination is possible for the resources that have many records. The example is shown in \Cref{lst:listresponse}. The \texttt{start} attribute represents the index of the first record in the \texttt{items} list. Finally, the \texttt{count} attribute informs the receiver about how many records are actually available in total.
+These endpoints also accept the \texttt{start} and \texttt{count} query parameters that set the requested \emph{start} and \emph{number} of items in \texttt{ListResponse}. 
 
 \begin{lstlisting}[language=Java, caption=ListResponse, label=lst:listresponse]
 {

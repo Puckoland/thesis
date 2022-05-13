@@ -1,47 +1,7 @@
 \section{Rooms}
-The following endpoints are implemented for the rooms management. They are stored in \texttt{RoomController}.
-
-\subsection{List Rooms}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/rooms}
-    \item \textbf{Description}\\
-        Lists \texttt{Room}s.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} ListResponse<RoomModel>}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        room-id & QUERY & Filter the entries that have room with this id \\ 
-        participant-user-id & QUERY & Filter the entries that have participant with this id \\
-        sort & QUERY & Sort entries by \emph{sort} parameter \\
-        sort-desc & QUERY & Sorts entries in descending order if true \\
-        start & QUERY & \emph{Start} the listing from this number \\  
-        count & QUERY & \emph{Count} of records to return \\
-        \bottomrule
-        \end{tabularx}
-    \caption{List roles parameters table.}
-\end{table}
-
-\subsection{Get Specific Room}
-\begin{description}
-    \item \textbf{HTTP request}\\
-        \texttt{\text{[GET]} /api/v1/rooms/{id:.+}}
-    \item \textbf{Description}\\
-        Returns \texttt{Room}'s authorized data.
-    \item \textbf{Response}\\
-        \texttt{\text{[200 OK]} RoomAuthorizedData}
-\end{description}
-\begin{table}[ht!]
-    \begin{tabularx}{\textwidth}{llX}
-        \toprule
-        Name & Type & Description \\
-        \midrule
-        id & PATH & Use room with this id \\
-        \bottomrule
-        \end{tabularx}
-    \caption{List roles parameters table.}
-\end{table}
+The endpoints discussed in this section concern the reservation recordings and are defined in \texttt{RoomController}.
+The available endpoints include:
+\begin{itemize}
+    \item \textbf{[GET] /api/v1/rooms} -- Returns all rooms (\texttt{ListResponse<Room\-Model>}) that can be filtered by the participation of a participant specified by the \texttt{participant-user-id} query parameter.
+    \item \textbf{[GET] /api/v1/rooms/\{id:.+\}} -- Returns the detailed information about room (\texttt{RoomAuthorizedData}) that contains additional information about pins and aliases.
+\end{itemize}
