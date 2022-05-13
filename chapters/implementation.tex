@@ -16,6 +16,7 @@ First, the configuration of the REST server itself is essential. The controller 
 \begin{itemize}
     \item \texttt{<host>} -- the host where the REST API shall serve
     \item \texttt{<port>} -- the port where the REST API shall serve
+    \item \texttt{<origin>} -- the allowed origins for the REST API CORS configuration
     \item \texttt{<ssl-key-store>} -- the SSL (Secure Socket Layer) key store from inter-domain extension \cite{pavelka2016shongo}
     \item \texttt{<ssl-key-store-type>} -- the type of key store
     \item \texttt{<ssl-key-store-password>} -- the password for key store
@@ -28,6 +29,8 @@ First, the configuration of the REST server itself is essential. The controller 
     <rest-api>
         <host>meetings.cesnet.cz</host>
         <port>9999</port>
+        <origin>http://localhost:4200</origin>
+        <origin>https://meetings.cesnet.cz</origin>
         <ssl-key-store>keystore/server.keystore</ssl-key-store>
         <ssl-key-store-password>
             (password)

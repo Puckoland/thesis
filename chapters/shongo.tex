@@ -16,7 +16,7 @@ The system is currently deployed in these domains:
     \item \url{https://meetings.cesnet.cz/} -- reservation system for \\
     H.323/SIP and Adobe Connect virtual rooms within CESNET videoconferencing infrastructure
     \item \url{https://meetings.cesnet.cz/ceitec/} -- reservation system for physical rooms of CEITEC --- Central European Institute of Technology
-    \item \url{https://meetings.cesnet.cz/cuni/} -- reservation system for users maintained in the authentication system of Charles University\footnote{\url{https://cuni.cz/}}.
+    \item \url{https://meetings.cesnet.cz/cuni/} -- reservation system for Adobe Connect virtual rooms of Charles University\footnote{\url{https://cuni.cz/}}.
 \end{itemize}
 
 Users can log in using their profile from any organization belonging to the Czech academic identity federation \footfullcite{eduid}.
@@ -64,7 +64,9 @@ The authentication server authenticates incoming requests for the controller com
 Besides that, it also manages the authentication layer of the web conference system Adobe Connect. This layer uses the user's information gained after logging in via system Shibboleth\footnote{Shibboleth, \url{https://www.shibboleth.net/}}.
 
 \subsection{Web Client} \label{webclient}
-The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the controller’s services. That results in server-side rendering from typical model-view-controller architecture.
+The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the controller’s services. That results in server-side rendering as in typical model-view-controller architecture illustrated in \Cref{fig:mvc}.
+
+\scalegraphics{assets/mvc.png}{Model-View-Controller architecture}{mvc}
 
 Thanks to this component, users can authenticate via OpenID Connect \footnote{OpenID Connect, \url{https://openid.net/connect/}} and request a reservation of any available resource comfortably via the web browser.
 
