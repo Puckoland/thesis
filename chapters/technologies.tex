@@ -5,7 +5,7 @@ This chapter will introduce the technologies used to implement the REST API for 
 \section{Representational State Transfer} \label{rest}
 Representational State Transfer or \texttt{REST} is an architectural style for distributed hypermedia systems. \citeauthor{fielding2000rest} introduced the REST first time in \citeyear{fielding2000rest} \cite{fielding2000rest}.
 \subsection{REST design principles}
-Unlike other API designs such as XML-RPC or SOAP, REST APIs support any format for communication. However, rules have to be followed so the API can be \emph{RESTful}.
+Unlike other API designs such as XML-RPC or SOAP, REST APIs support any format for communication. However, rules have to be followed so the API can be called \emph{RESTful}.
 
 These rules are called REST design principles --- also known as architectural constraints \cite{ibmrest}:
 \begin{enumerate}
@@ -32,14 +32,14 @@ Jackson automatically uses public attributes, or rather getters, to serialize va
 
 
 \section{Spring Framework} \label{sec:spring}
-The most popular framework for Java applications is the Spring, which offers a context for the application.
+Nowadays, the most popular framework for Java applications is Spring, which offers a context for the application.
 First of all, the framework starts a container (Spring application context) that manages the application components --- also known as \emph{Beans} --- and wires them together so they can use each other. This wiring is achieved by \emph{dependency injection}.
 The components do not create and maintain different features they depend upon; instead, they rely on a separate entity (Spring application) to manage the dependent modules and inject them into components that need them \cite{walls2022spring}.
 
-The Shongo system is written in Java and the Spring framework features were used for quicker and simpler development of the system. TODO how?
+The Shongo system is written in Java, and the Spring framework features were used for faster and easier development of the system. Its dependency injection feature was used to inject functionalities of common objects, such as services and caches, into other objects that need these functionalities. In addition, Spring’s web features solved the basic issues of the \emph{Web Client} implementation, such as HTTP request-response processing and MVC implementation.
 
 The Spring framework also supports REST API implementation, and this work fully utilizes this feature.
-Spring uses embedded \texttt{ObjectMapper} from Jackson library (\Cref{sec:jackson}) internally to serialize and deserialize foreign formats (mainly JSON) to Java objects automatically. The \texttt{ObjectMapper} is very useful when dealing with HTTP requests which usually use JSON for object formatting. Thanks to this feature, an API developer can easily use simple model objects to acquire or provide data to the client via HTTP communication.
+Spring uses embedded \texttt{ObjectMapper} from Jackson library (\Cref{sec:jackson}) internally to serialize and deserialize foreign formats (JSON in most cases) to Java objects automatically. The \texttt{ObjectMapper} is very useful when dealing with HTTP requests which usually use JSON for object formatting. Thanks to this feature, an API developer can easily use simple model objects to acquire or provide data to the client via HTTP communication.
 This usage will be discussed further in \Cref{cha:implementation}.
 
 
@@ -89,7 +89,7 @@ public class DataExample {
 
 \section{Postman} \label{sec:postman}
 Postman is an API platform for building and using APIs. It offers an environment and workspaces to test extensive APIs.
-For these qualities, the Postman was used in the early stages for testing the developed REST API.
+For these qualities, the Postman was used in the early stages for testing of the developed REST API.
 
 
 \section{OpenAPI Specification} \label{sec:openapi}

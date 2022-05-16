@@ -1,4 +1,4 @@
-\chapter{Implementation} \label{cha:implementation}
+\chapter{Implementation and Documentation} \label{cha:implementation}
 All classes related to the REST API are stored in the Controller’s package  \texttt{cz.cesnet.shongo.controller.rest}.
 Aside from this package, the only changes made are in a few files that retrieve data from the database --- where additional data were required to be loaded --- and inter-domain implementation files\cite{pavelka2016shongo} whose configuration has been merged with the REST configuration.
 
@@ -64,9 +64,9 @@ The REST Controllers are annotated with \texttt{@RestController} annotation from
     \item \texttt{@Controller} -- makes the class auto-detectable through classpath scanning
     \item \texttt{@ResponseBody} -- binds the return values of the mapped methods to the HTTP response body
 \end{description}
-This annotation is combined with the \texttt{@RequestMapping} annotation, which uses the web request path to map the incoming request to the method that processes the request and responds to the client. \texttt{@RequestMapping} can also be parameterized, particularly with path (path to the endpoint), consumes (expected incoming body form), and produces (outgoing body form).
+This annotation is combined with the \texttt{@RequestMapping} annotation, which uses the web request path to map the incoming request to the method that processes the request and responds to the client. \texttt{@RequestMapping} can also be parameterized, particularly with \texttt{path} (path to the endpoint), \texttt{consumes} (expected incoming body form), and \texttt{produces} (outgoing body form) parameters.
 
-There are usually only a few attributes in the controller classes. These attributes are generally Controller’s services, and \emph{dependency injection} is used to access these services. Thanks to Spring annotation \texttt{@Autowired}, they are resolved to \emph{Beans} defined in \texttt{rest-api-servlet.xml} and injected into the controller class. The example of this file can be noticed in \Cref{lst:beans}.
+There are usually only few attributes in the controller classes. These attributes are generally Controller’s services, and \emph{dependency injection} is used to access these services. Thanks to Spring annotation \texttt{@Autowired}, they are resolved to \emph{Beans} defined in \texttt{rest-api-servlet.xml} and injected into the controller class. The example of this file can be noticed in \Cref{lst:beans}.
 
 \begin{lstlisting}[language=XML, caption=rest-api-servlet.xml, label=lst:beans]
 <?xml version="1.0" encoding="UTF-8"?>
@@ -99,14 +99,14 @@ There are usually only a few attributes in the controller classes. These attribu
 
 The last part of REST Controllers is the declaration and implementation of methods handling distinct REST resources. The methods are annotated with \texttt{@RequestMapping} or rather an exact mapping according to the selected HTTP method (\texttt{@GetMapping}, \texttt{@PostMapping}, \texttt{@PutMapping}, \texttt{@DeleteMapping}).
 These annotations also take a path parameter, which is then concatenated to the class’s \texttt{@RequestMapping} path parameter.
-In addition, the methods can retrieve HTTP request attributes annotated with \texttt{@RequestAttribute} (most importantly SecurityToken added by AuthFilter), HTTP request parameters annotated with \texttt{@RequestParam}, path parameters annotated with \texttt{@PathVariable} (and specified in the path as \texttt{"\{variableName\}"}) and also body parameter annotated with \texttt{@RequestBody}.
+In addition, the methods can retrieve HTTP request attributes annotated with \texttt{@RequestAttribute} (most importantly SecurityToken added by \texttt{AuthFilter}), HTTP request parameters annotated with \texttt{@RequestParam}, path parameters annotated with \texttt{@PathVariable} (and specified in the path as \texttt{"\{variableName\}"}) and also the request body annotated with \texttt{@RequestBody}.
 
 \input{assets/controller}
 
 \section{Data Models}
 Model classes are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. The models are stored in the \texttt{models} sub-package. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the project Lombok (\Cref{sec:lombok}).
 \emph{Jackson} can then serialize and deserialize these classes as described in \Cref{sec:jackson}. Attributes not eligible for serialization are annotated with \texttt{@JacksonIgnore} and for custom name of field in serialized object \texttt{@JacksonProperty("field\_name")} is used.
-That does not mean that these classes cannot include anything else. Most importantly, they usually also contain \texttt{fromApi()} and \texttt{toApi()} methods which serve as converters from and to Controller API objects.
+That does not mean that these classes cannot include anything else. Most importantly, they usually also contain \texttt{fromApi()} and \texttt{toApi()} methods which serve as converters from and to Controller API objects. The \Cref{lst:model} serves as an example of such class.
 
 \begin{lstlisting}[language=java, caption=RoomModel.java, label=lst:model]
 // Generates constructor, getters, setters, equals, and hashCode functions
@@ -154,7 +154,7 @@ For extraordinary cases, new exceptions were made, such as \texttt{UnsupportedAp
 These (and any other) exceptions can be thrown during request processing, in which case, the server responds with HTTP response 500 Internal Server Error and prints the \emph{stacktrace} to the HTTP body by default.
 To provide better information for the client, \texttt{GlobalController\-ExceptionHandler} class was implemented and annotated with Spring web annotation \texttt{@RestControllerAdvice}.
 The methods in the class are annotated with \texttt{@ExceptionHandler}, which takes an exception as a parameter. If this exception is thrown, the request processing intercepts and the annotated method runs instead.
-These methods can handle the exception and then respond to the client with the \texttt{ResponseEntity} object. As a result, any object can be passed into the HTTP response body with any HTTP response status code.
+These methods can handle the exception and then respond to the client with the \texttt{ResponseEntity} object. As a result, any object can be passed into the HTTP response body with a desired HTTP response status code.
 
 \begin{lstlisting}[language=java, caption=GlobalControllerExceptionHandler.java, label=lst:err]
 @RestControllerAdvice

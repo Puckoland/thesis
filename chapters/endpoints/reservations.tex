@@ -9,33 +9,33 @@ The available endpoints include:
     \end{description}
     \item \textbf{/api/v1/reservation\_requests/\{id:.+\}} -- Manages the reservation request specified by \texttt{id} path parameter. There are two available HTTP methods:
     \begin{description}
-        \item \textbf{[GET]} -- Returns detailed information about the reservation request (\texttt{ReservationRequestDetailModel}). It contains additional information about the current state of the reservation request, its authorized data (\texttt{RoomAuthorizedData}) holding access pins and aliases, and the history of the reservation request (\texttt{List<ReservationRequestHistoryModel>}) holding information about how the request changed over the time.
+        \item \textbf{[GET]} -- Returns detailed information about the reservation request (\texttt{ReservationRequestDetailModel}). It contains additional information about the current state of the reservation request, its authorized data (\texttt{RoomAuthorizedData}) holding access pins and aliases, and the history of the reservation request (\texttt{List<ReservationRequestHistoryModel>}) holding information about how the request changed over time.
         \item \textbf{[PATCH]} -- Modifies the reservation request with parameters specified by \texttt{ReservationRequestCreateModel} acquired from the request body.
         \item \textbf{[DELETE]} -- Deletes the reservation request.
     \end{description}
-    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/accept} -- The resource owner or administrator can use this endpoint to accept the reservation request awaiting confirmation, so it becomes ready for allocation and eventually a reservation.
+    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/accept} -- The resource owner or administrator can use this endpoint to accept the reservation request awaiting confirmation, so it becomes ready for allocation and eventually turns into a reservation.
     \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/reject} -- The resource owner or administrator can use this endpoint to reject the reservation request awaiting confirmation.
     \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/reject} -- Reverts the modifications of the reservation request.
 \end{itemize}
 
 
-\begin{table}[H]
-    \label{tab:res}
+\begin{table}[!ht]
     \begin{tabularx}{\textwidth}{llX}
         \toprule
-        Name & Type & Description \\
+        Name & Description \\
         \midrule
-        resource & QUERY & Filters entries that use given \emph{resource} \\
-        type & QUERY & Filters entries with given \emph{type} \\
-        search & QUERY & Filters entries that contains \emph{search} \\
-        participant\_user\_id & QUERY &  Filters entries that have participant with id \emph{participant\_user\_id} \\
-        user\_id & QUERY & Filters entries that owner's id equals \emph{user\_id} \\
-        interval\_from & QUERY & Filters entries from this date \\  
-        interval\_to & QUERY & Filters entries to this date \\
-        technology & QUERY & Filters entries by given \emph{TechnologyModel} \\
-        parentRequestId & QUERY & Filters entries that have \emph{parentRequestId} \\
-        allocation\_state & QUERY & Filters entries that have \emph{allocation\_state} \\
+        resource & Filters entries that use given \emph{resource} \\
+        type & Filters entries with given \emph{type} \\
+        search & Filters entries that contains \emph{search} \\
+        participant\_user\_id &  Filters entries that have participant with id \emph{participant\_user\_id} \\
+        user\_id & Filters entries that owner's id equals \emph{user\_id} \\
+        interval\_from & Filters entries from this date \\  
+        interval\_to & Filters entries to this date \\
+        technology & Filters entries by given \emph{TechnologyModel} \\
+        parentRequestId & Filters entries that have \emph{parentRequestId} \\
+        allocation\_state & Filters entries that have \emph{allocation\_state} \\
         \bottomrule
     \end{tabularx}
     \caption{List reservation requests parameters table.}
+    \label{tab:res}
 \end{table}

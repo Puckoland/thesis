@@ -1,20 +1,21 @@
 \chapter{Final Api} \label{cha:api}
-This chapter describes the final REST API implemented for the Shongo system. The complete generated (OpenAPI) documentation is available in \Cref{ape:documentation}.
+This chapter describes the final REST API implemented for the Shongo system. The complete generated (OpenAPI) documentation is available in \Cref{apx:files}.
 
-Most of the list endpoints return data in \texttt{ListResponse<Model>} format. This is done so the pagination is possible for the resources that have many records. The example is shown in \Cref{lst:listresponse}. The \texttt{start} attribute represents the index of the first record in the \texttt{items} list. Finally, the \texttt{count} attribute informs the receiver about how many records are actually available in total.
-These endpoints also accept the \texttt{start} and \texttt{count} query parameters that set the requested \emph{start} and \emph{number} of items in \texttt{ListResponse}. 
+Most of the list endpoints return data in \texttt{ListResponse<Model>} format. This is done so that the pagination is possible for the resources that have many records. The example is shown in \Cref{lst:listresponse}. The \texttt{start} attribute represents the index of the first record in the \texttt{items} list. Finally, the \texttt{count} attribute informs the receiver about how many records are actually available in total.
+These endpoints also accept the \texttt{start} and \texttt{count} query parameters that set the requested \emph{start} and \emph{maximum number} of items in \texttt{ListResponse}.
+In some cases, \texttt{sort} and \texttt{sort-desc} query parameters are accepted to set the property by which the entries will be sorted and whether they are supposed to be sorted in ascending or descending order.
 
 \begin{lstlisting}[language=Java, caption=ListResponse, label=lst:listresponse]
 {
-    start: 0,
-    count: 2,
+    start: 100,
+    count: 500,
     items: [
         {
-            id: 1,
+            id: 101,
             name: "My room"
         },
         {
-            id: 2,
+            id: 102,
             name: "Your room"
         }
     ]
@@ -23,9 +24,9 @@ These endpoints also accept the \texttt{start} and \texttt{count} query paramete
 
 \input{chapters/endpoints/users}
 \input{chapters/endpoints/resources}
+\input{chapters/endpoints/reservations}
 \input{chapters/endpoints/roles}
 \input{chapters/endpoints/participants}
-\input{chapters/endpoints/reservations}
 \input{chapters/endpoints/rooms}
 \input{chapters/endpoints/recordings}
 \input{chapters/endpoints/reports}
