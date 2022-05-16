@@ -5,7 +5,7 @@ The second reason is the primary user interface --- the \hyperref[webclient]{\em
 That is why developing a new front-end became a goal of another thesis \cite{drobnakm}.
 Nevertheless, until now, the whole communication within the system has been done via Spring Framework in Java. In order to achieve communication between Shongo and the new Web Client (and possibly other systems or services), which is not part of the Shongo system, a new API has to be implemented.
 
-\scalegraphics{assets/shongo_architecture_new}{New Shongo architecture}{architecture_new}
+\scalegraphics{assets/shongo_architecture_new_200}{New Shongo architecture}{architecture_new}
 
 Comparing the old system architecture shown in \Cref{fig:architecture} and the new architecture shown in \Cref{fig:architecture_new} reveals that the \emph{Web Client} component was moved out of the Shongo system. The new \emph{Web Client} is now developed and maintained separately at the new Github repository\footnote{\url{https://github.com/shongo/shongo-frontend}}. Another thesis was devoted to this part of the changes \cite{drobnakm}.
 Additionally, the \emph{Web Client} communicates with the \hyperref[controller]{\emph{Controller}} via \emph{HTTP} requests for the \emph{REST API} server sub-component instead of previous direct communication via \emph{XML-RPC} services. The implementation of said \emph{REST API} is the subject of this thesis.
