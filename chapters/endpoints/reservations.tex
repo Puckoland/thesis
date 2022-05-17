@@ -7,20 +7,20 @@ The available endpoints include:
         \item \textbf{[GET]} -- Returns all reservation requests (\texttt{ListResponse<Reser\-vationRequestModel>}). However, they can be filtered by many query parameters closely described in \Cref{tab:res}.
         \item \textbf{[POST]} -- Creates a new reservation request defined by \texttt{Reser\-vationRequestCreateModel} acquired from the request body.
     \end{description}
-    \item \textbf{/api/v1/reservation\_requests/\{id:.+\}} -- Manages the reservation request specified by \texttt{id} path parameter. There are two available HTTP methods:
+    \item \textbf{/api/v1/reservation\_requests/\{id\}} -- Manages the reservation request specified by \texttt{id} path parameter. There are two available HTTP methods:
     \begin{description}
         \item \textbf{[GET]} -- Returns detailed information about the reservation request (\texttt{ReservationRequestDetailModel}). It contains additional information about the current state of the reservation request, its authorized data (\texttt{RoomAuthorizedData}) holding access pins and aliases, and the history of the reservation request (\texttt{List<ReservationRequestHistoryModel>}) holding information about how the request changed over time.
-        \item \textbf{[PATCH]} -- Modifies the reservation request with parameters specified by \texttt{ReservationRequestCreateModel} acquired from the request body.
+        \item \textbf{[PATCH]} -- Modifies the reservation request with parameters specified by \texttt{ReservationRequestCreateModel} which is acquired from the request body.
         \item \textbf{[DELETE]} -- Deletes the reservation request.
     \end{description}
-    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/accept} -- The resource owner or administrator can use this endpoint to accept the reservation request awaiting confirmation, so it becomes ready for allocation and eventually turns into a reservation.
-    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/reject} -- The resource owner or administrator can use this endpoint to reject the reservation request awaiting confirmation.
-    \item \textbf{[POST] /api/v1/reservation\_requests/\{id:.+\}/reject} -- Reverts the modifications of the reservation request.
+    \item \textbf{[POST] /api/v1/reservation\_requests/\{id\}/accept} -- The administrator or resource owner can use this endpoint to accept the reservation request awaiting confirmation, so it becomes ready for allocation and eventually turns into a reservation.
+    \item \textbf{[POST] /api/v1/reservation\_requests/\{id\}/reject} -- The administrator or resource owner can use this endpoint to reject the reservation request awaiting confirmation.
+    \item \textbf{[POST] /api/v1/reservation\_requests/\{id\}/reject} -- Reverts the modifications of the reservation request.
 \end{itemize}
 
 
 \begin{table}[!ht]
-    \begin{tabularx}{\textwidth}{llX}
+    \begin{tabularx}{\textwidth}{lX}
         \toprule
         Name & Description \\
         \midrule

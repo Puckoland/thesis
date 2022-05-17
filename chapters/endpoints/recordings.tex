@@ -2,5 +2,5 @@
 As described in \Cref{cha:shongo}, the virtual meetings can be recorded. The available recordings can be managed using the endpoints implemented in \texttt{RecordingController}. The available endpoints include:
 \begin{itemize}
     \item \textbf{[GET] /api/v1/reservation\_requests/\{id\}/recordings} -- Returns all re\-cordings (\texttt{ListResponse<RecordingModel>}) of reservation request specified by \texttt{id} path parameter.
-    \item \textbf{[DELETE] /api/v1/reservation\_requests/\{id\}/recordings/\{recordingId:.+\}} -- Deletes the recording specified by \texttt{recordingId} path parameter from reservation request specified by \texttt{id} parameter.
+    \item \textbf{[DELETE] /api/v1/reservation\_requests/\{id\}/recordings/\{recordingId\}} -- Deletes the recording specified by \texttt{recordingId} path parameter from reservation request specified by \texttt{id} parameter.
 \end{itemize}

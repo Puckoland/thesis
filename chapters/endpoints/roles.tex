@@ -7,5 +7,5 @@ The available endpoints include:
         \item \textbf{[GET]} -- Returns all roles (\texttt{ListResponse<UserRoleModel>}) that are configured for specified reservation request.
         \item \textbf{[POST]} -- Creates a new role defined by \texttt{UserRoleModel} acquired from the request body.
     \end{description}
-    \item \textbf{[DELETE] /api/v1/reservation\_requests/\{id\}/roles/\{entityId:.+\}} -- Deletes the configured user role specified by \texttt{entityId} path parameter from reservation request specified by \texttt{id} path parameter.
+    \item \textbf{[DELETE] /api/v1/reservation\_requests/\{id\}/roles/\{entityId\}} -- Deletes the configured user role specified by \texttt{entityId} path parameter from reservation request specified by \texttt{id} path parameter.
 \end{itemize}
