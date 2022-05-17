@@ -22,8 +22,7 @@ public class ReservationRequestController
         @RequestAttribute(TOKEN) SecurityToken securityToken,
         // Reads optional request parameter allocation_state and stores it in allocationState variable
         @RequestParam(value = "allocation_state", required = false) AllocationState allocationState,
-        ...
-    )
+        ...)
     {
         // Use Controller service to acquire requested data
         ReservationRequestListRequest request = new ReservationRequestListRequest();
@@ -35,6 +34,8 @@ public class ReservationRequestController
         return response;
     }
     
+    // Sets the response status for successful execution of method
+    @ResponseStatus(HttpStatus.CREATED)
     // Binds this method to the HTTP POST request with path defined in @RequestMapping
     @PostMapping
     void createRequest(
@@ -50,8 +51,7 @@ public class ReservationRequestController
     
     // Sets possible HTTP responses
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200"),
-        @ApiResponse(responseCode = "404", description = "Reservation request not found.", content = @Content),
+        @ApiResponse(responseCode = "200"), @ApiResponse(responseCode = "404", description = "Reservation request not found.", content = @Content),
     })
     // Binds this method to the HTTP DELETE request with path defined in @RequestMapping concatenated with "/{id:.+}". The ':' marks the start of a regex to be used for the id variable (useful to accept only numbers for example). The regex ".+" is used because shongo-id can include URL key characters like ':' or '-'.
     @DeleteMapping("/{id:.+}")
@@ -64,7 +64,6 @@ public class ReservationRequestController
         reservationService.deleteReservationRequest(
             securityToken, id);
     }
-    
     ...
 }
 \end{lstlisting}

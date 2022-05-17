@@ -150,7 +150,7 @@ public class RoomModel {
 
 \section{Error Handling}
 Quite many things can go wrong while processing a request. For this reason, the \texttt{error} sub-package was created for files concerning errors and their handling.
-For extraordinary cases, new exceptions were made, such as \texttt{UnsupportedApiException} or \texttt{ObjectInaccessibleException}.
+For extraordinary cases, new exceptions were made, such as \texttt{UnsupportedApiException} or \texttt{ObjectInaccessible\-Exception}.
 These (and any other) exceptions can be thrown during request processing, in which case, the server responds with HTTP response 500 Internal Server Error and prints the \emph{stacktrace} to the HTTP body by default.
 To provide better information for the client, \texttt{GlobalController\-ExceptionHandler} class was implemented and annotated with Spring web annotation \texttt{@RestControllerAdvice}.
 The methods in the class are annotated with \texttt{@ExceptionHandler}, which takes an exception as a parameter. If this exception is thrown, the request processing intercepts and the annotated method runs instead.
@@ -162,7 +162,7 @@ public class GlobalControllerExceptionHandler
 {
     @ExceptionHandler(TodoImplementException.class)
     public ResponseEntity<String> handleTodo(TodoImplementException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_IMPLEMENTED);
+        return ErrorModel.createResponseFromException(e, HttpStatus.NOT_IMPLEMENTED);
     }
     ...
 }
@@ -208,4 +208,4 @@ Springdoc generates OpenAPI specification based on Spring web annotations by def
 The resulting OpenAPI file is added to the REST server and is available at the \texttt{/v3/open-api} path \cite{springdoc}.
 
 The Swagger UI (\Cref{sec:swagger}) is then used for user-friendly visualization of the OpenAPI specification mentioned above.
-The user interface (web site) is acquired and saved in the project resources using the same \emph{springdoc-openapi} dependency as for OpenAPI specification. After that, the default OpenAPI path is modified from \texttt{https://\-petstore.swagger.io\-/v2/swagger\-.json} to \texttt{/v3/open-api}. Finally, these resources are added to the REST API server and made available at the \texttt{/swagger-ui/index.html} path.
+The user interface (web site) is acquired and saved in the project resources using the same \emph{springdoc-openapi} dependency as for OpenAPI specification. After that, the default OpenAPI path is set to \texttt{/v3/open-api}. Finally, these resources are added to the REST API server and made available at the \texttt{/swagger-ui/index.html} path.

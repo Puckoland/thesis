@@ -39,7 +39,7 @@ The components do not create and maintain different features they depend upon; i
 The Shongo system is written in Java, and the Spring framework features were used for faster and easier development of the system. Its dependency injection feature was used to inject functionalities of common objects, such as services and caches, into other objects that need these functionalities. In addition, Spring’s web features solved the basic issues of the \emph{Web Client} implementation, such as HTTP request-response processing and MVC implementation.
 
 The Spring framework also supports REST API implementation, and this work fully utilizes this feature.
-Spring uses embedded \texttt{ObjectMapper} from Jackson library (\Cref{sec:jackson}) internally to serialize and deserialize foreign formats (JSON in most cases) to Java objects automatically. The \texttt{ObjectMapper} is very useful when dealing with HTTP requests which usually use JSON for object formatting. Thanks to this feature, an API developer can easily use simple model objects to acquire or provide data to the client via HTTP communication.
+Spring uses embedded \texttt{Object\-Mapper} from Jackson library (\Cref{sec:jackson}) internally to serialize and deserialize foreign formats (JSON in most cases) to Java objects automatically. The \texttt{ObjectMapper} is very useful when dealing with HTTP requests which usually use JSON for object formatting. Thanks to this feature, an API developer can easily use simple model objects to acquire or provide data to the client via HTTP communication.
 This usage will be discussed further in \Cref{cha:implementation}.
 
 

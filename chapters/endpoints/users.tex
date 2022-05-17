@@ -3,10 +3,10 @@ The client might need information about users and groups in the Shongo system.
 These resources are made available via endpoints implemented in \texttt{UserController}.
 The available endpoints include:
 \begin{itemize}
-    \item \textbf{\text{[GET]} /api/v1/users} -- Returns all users (\texttt{ListResponse<UserInformation>}) that match the \texttt{filter} query parameter and are part of the group with the \texttt{groupId} query parameter.
-    \item \textbf{\text{[GET]} /api/v1/users/\{userId:.+\}} -- Returns information about a single user (\texttt{UserInformation}). The \texttt{userId} path variable defines the requested user.
+    \item \textbf{\text{[GET]} /api/v1/users} -- Returns all users (\texttt{ListResponse<UserIn\-formation>}) that match the \texttt{filter} query parameter and are part of the group with the \texttt{groupId} query parameter.
+    \item \textbf{\text{[GET]} /api/v1/users/\{userId\}} -- Returns information about a single user (\texttt{UserInformation}). The \texttt{userId} path variable defines the requested user.
     \item \textbf{\text{[GET]} /api/v1/groups} -- Returns all groups (\texttt{ListResponse<Group>}) that match the \texttt{filter} query parameter.
-    \item \textbf{\text{[GET]} /api/v1/users/\{groupId:.+\}} -- Returns information about a single group (\texttt{Group}). The \texttt{groupId} path variable defines the requested group.
+    \item \textbf{\text{[GET]} /api/v1/users/\{groupId\}} -- Returns information about a single group (\texttt{Group}). The \texttt{groupId} path variable defines the requested group.
     \item \textbf{/api/v1/settings} -- Manages the user’s settings. \texttt{SecurityToken} acquired from the \texttt{Authorization} HTTP header defines the user whose settings are being addressed. There are two available HTTP methods:
     \begin{description}
         \item \textbf{GET} -- Returns the user’s predefined settings (\texttt{SettingsModel}).
