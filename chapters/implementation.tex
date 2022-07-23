@@ -12,7 +12,7 @@ At the start of the \emph{Controller} service, the REST server is attached to th
 The REST server configuration is required before implementing API endpoints. These configuration files are stored in the \texttt{config} sub-package.
 
 \subsection{Configuration File Extension}
-First, the configuration of the REST server itself is essential. The controller configuration file \texttt{shongo-controller.cfg.xml} has been extended with the parameterization for the new code. Consequently, Shongo administrators can set the REST API server properties inside the \texttt{<rest-api>} XML element. An example of this new configuration is shown in \Cref{conf}. There are several configurable sub elements:
+First, the configuration of the REST server itself is essential. The controller configuration file \texttt{shongo-controller.cfg.xml} has been extended with the parameterization for the new code. Consequently, Shongo administrators can set the REST API server properties inside the \texttt{<rest-api>} XML element. An example of this new configuration is shown in \Cref{conf}. There are several configurable sub-elements:
 \begin{itemize}
     \item \texttt{<host>} -- the host where the REST API shall serve
     \item \texttt{<port>} -- the port where the REST API shall serve
@@ -50,7 +50,7 @@ Additionally, \texttt{AuthFilter} is added, which serves as a REST API middlewar
 \begin{enumerate}
     \item Decode an access token wrapped in the HTTP request authorization header as a bearer token.
     \item Check the token authorization.
-    \item Convert the token into \texttt{SecurityToken} object which contains an \emph{access token} for Shongo Controller and cached information about the user to whom the token belongs.
+    \item Convert the token into a \texttt{SecurityToken} object, which contains an \emph{access token} for Shongo Controller and cached information about the user to whom the token belongs.
     \item Add this new object to the request attributes using the \texttt{TOKEN} key so that subsequent endpoint handling (next middleware or final method) can effortlessly work with it.
 \end{enumerate}
 If the token is not present or is invalid, the server responds with an HTTP \emph{401 UNAUTHORIZED} response code.
@@ -104,13 +104,13 @@ In addition, the methods can retrieve HTTP request attributes annotated with \te
 \input{assets/controller}
 
 \section{Data Models}
-Model classes are mostly POJOs (Plain Old Java Objects) that represent objects received or sent by endpoints. The models are stored in the \texttt{models} sub-package. Usually, attributes with getters and setters are the only content of these classes. Therefore, most of them use \texttt{@Data} annotation from the project Lombok (\Cref{sec:lombok}).
-\emph{Jackson} can then serialize and deserialize these classes as described in \Cref{sec:jackson}. Attributes not eligible for serialization are annotated with \texttt{@JacksonIgnore} and for custom name of field in serialized object \texttt{@JacksonProperty("field\_name")} is used.
-That does not mean that these classes cannot include anything else. Most importantly, they usually also contain \texttt{fromApi()} and \texttt{toApi()} methods which serve as converters from and to Controller API objects. The \Cref{lst:model} serves as an example of such class.
+Model classes are mostly POJOs (Plain Old Java Objects) representing objects received or sent by endpoints. The models are stored in the \texttt{models} sub-package. Usually, attributes with getters and setters are the only content of these classes. Therefore, most use \texttt{@Data} annotation from the project Lombok (\Cref{sec:lombok}).
+\emph{Jackson} can then serialize and deserialize these classes as described in \Cref{sec:jackson}. Attributes not eligible for serialization are annotated with \texttt{@JacksonIgnore}, and for the custom name of a field in the serialized object, \texttt{@JacksonProperty\ ("field\_name")} is used.
+That does not mean that these classes cannot include anything else. Most importantly, they usually also contain \texttt{fromApi()} and \texttt{toApi()} methods which serve as converters from and to Controller API objects. The \Cref{lst:model} serves as an example of such a class.
 
 \begin{lstlisting}[language=java, caption=RoomModel.java, label=lst:model]
 // Generates constructor, getters, setters, equals, and hashCode functions
-// These generated functions enables Jackson to (de)serialize this object
+// These generated functions enable Jackson to (de)serialize this object
 @Data
 // Represents Controller's executable
 public class RoomModel {
@@ -129,7 +129,7 @@ public class RoomModel {
     private int licenceCount;
     ...
 
-    // Creates this object from data acquired from Controller service
+    // Creates this object from data acquired from the Controller service
     public static RoomModel fromApi(ExecutableSummary summary)
     {
         RoomModel roomModel = new RoomModel();
@@ -151,10 +151,10 @@ public class RoomModel {
 \section{Error Handling}
 Quite many things can go wrong while processing a request. For this reason, the \texttt{error} sub-package was created for files concerning errors and their handling.
 For extraordinary cases, new exceptions were made, such as \texttt{UnsupportedApiException} or \texttt{ObjectInaccessible\-Exception}.
-These (and any other) exceptions can be thrown during request processing, in which case, the server responds with HTTP response 500 Internal Server Error and prints the \emph{stacktrace} to the HTTP body by default.
+These (and any other) exceptions can be thrown during the request processing, in which case, the server responds with HTTP response 500 Internal Server Error and prints the \emph{stacktrace} to the HTTP body by default.
 To provide better information for the client, \texttt{GlobalController\-ExceptionHandler} class was implemented and annotated with Spring web annotation \texttt{@RestControllerAdvice}.
 The methods in the class are annotated with \texttt{@ExceptionHandler}, which takes an exception as a parameter. If this exception is thrown, the request processing intercepts and the annotated method runs instead.
-These methods can handle the exception and then respond to the client with the \texttt{ResponseEntity} object. As a result, any object can be passed into the HTTP response body with a desired HTTP response status code.
+These methods can handle the exception and respond to the client with the \texttt{ResponseEntity} object. As a result, any object can be passed into the HTTP response body with a desired HTTP response status code.
 
 \begin{lstlisting}[language=java, caption=GlobalControllerExceptionHandler.java, label=lst:err]
 @RestControllerAdvice
@@ -176,7 +176,7 @@ The \texttt{ClientWebUrl} class holds the String constants for the endpoints pat
 
 
 \section{Documentation}
-The OpenAPI (\Cref{sec:openapi}) specification of the just described implementation of REST API is generated using \texttt{Springdoc} from the Spring framework (\Cref{sec:spring}), so the users can have general and straightforward API documentation available to them.
+The OpenAPI (\Cref{sec:openapi}) specification of the just described REST API implementation is generated using \texttt{Springdoc} from the Spring framework (\Cref{sec:spring}), so the users can have general and straightforward API documentation available to them.
 For this purpose, the \emph{springdoc-openapi} dependency was added to \emph{Controller}'s \texttt{pom.xml}, and the \texttt{OpenApiConfig} class was created. In this configuration file, Springdoc dependencies were imported using Spring's \emph{@Import}, global API attributes were defined with \texttt{@OpenAPIDefinition}, and security was defined with \texttt{@SecurityScheme} annotation.
 This is shown in \Cref{lst:openapiconf}.
 \begin{lstlisting}[language=Java, caption=OpenApiConfig.java, label=lst:openapiconf]

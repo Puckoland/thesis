@@ -2,7 +2,7 @@
 If a client wants to adjust the users or groups that can participate in reserved meetings, he can use the endpoints defined in  \texttt{Participant\-Controller}.
 The available endpoints include:
 \begin{itemize}
-    \item \textbf{/api/v1/reservation\_requests/\{id\}/participants} -- Manages participants configured for reservation request specified by \texttt{id} path parameter. There are two possible HTTP methods:
+    \item \textbf{/api/v1/reservation\_requests/\{id\}/participants} -- Manages the participants configured for reservation request specified by \texttt{id} path parameter. There are two possible HTTP methods:
     \begin{description}
         \item \textbf{[GET]} -- Returns all participants (\texttt{ListResponse<Participant\-Model>}) that are configured for the reservation request specified by the \texttt{id} parameter.
         \item \textbf{[POST]} -- Creates a new participant defined by \texttt{ParticipantMo\-del} acquired from the request body for the specified reservation request.

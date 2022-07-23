@@ -1,7 +1,7 @@
 \section{What to Change and Why}
 
 The main reason for changes is that the architecture concentrates on modularity; however, the system cannot be observed or managed from external sources.
-The second reason is the primary user interface --- the \hyperref[webclient]{\emph{Web Client}} --- and its server-side rendering which is not as powerful as today's JavaScript frameworks like Angular or React.
+The second reason is the primary user interface --- the \hyperref[webclient]{\emph{Web Client}} --- and its server-side rendering, which is not as powerful as today's JavaScript frameworks like Angular or React.
 That is why developing a new front-end became a goal of another thesis \cite{drobnakm}.
 Nevertheless, until now, the whole communication within the system has been done via Spring Framework in Java. In order to achieve communication between Shongo and the new Web Client (and possibly other systems or services), which is not part of the Shongo system, a new API has to be implemented.
 

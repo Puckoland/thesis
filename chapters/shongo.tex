@@ -1,6 +1,6 @@
 \chapter{Reservation System Shongo} \label{cha:shongo}
 This chapter introduces the subject of this work, the reservation system Shongo.
-Information for this chapter was drawn mainly from the Shongo API documentation  \cite{shongoapi}. However, this documentation is outdated and is only partially correct. Since the documentation had been introduced, multiple theses and other works have contributed to the development of the Shongo system. Thus, much information has been drawn from these, especially the theses concerning inter-domain extension \cite{pavelka2016shongo} and redesign of the system \cite{perichta2020}.
+Information for this chapter was drawn mainly from the Shongo API documentation  \cite{shongoapi}. However, this documentation is outdated and is only partially correct. Since the documentation was introduced, multiple theses and other works have contributed to the development of the Shongo system. Thus, much information has been drawn from these, especially the theses concerning inter-domain extension \cite{pavelka2016shongo} and redesign of the system \cite{perichta2020}.
 
 Currently, at version v0.9.3, Shongo is a generic system used for managing resources.
 Its primary function is to manage resource reservations for virtual videoconferencing meetings and any physical resources, such as physical meeting rooms, vehicles or parking places.
@@ -30,22 +30,22 @@ Physical reservations are very straightforward:
     \item If the request is permitted, he can use the physical resource for a specified period.
 \end{enumerate}
 
-On the other hand, virtual meetings reservations are a little bit more complicated. Virtual rooms represent the allocation of a specific virtual resource. There are two types of virtual rooms:
+On the other hand, virtual meeting reservations are more complicated. Virtual rooms represent the allocation of a specific virtual resource. There are two types of virtual rooms:
 \begin{itemize}
     \item \textbf{Permanent rooms} are devoted to long-term reservations. This type reserves virtual resource --- name and a unique identifier of room (URL, phone number, SIP URI) --- but without capacity reservation for the chosen resource (period, periodicity, number of participants). The user has to book capacity separately after creating the permanent room.
-    \item \textbf{One-time (ad-hoc) rooms} are intended for one-time reservations of virtual resources. The controller generates a name and unique identifier according to available values from the range configured in the resource specification. That results in a new room name and identification for each reservation. A capacity is reserved when the room is created, and the room is deleted after the requested time slot ends.
+    \item \textbf{One-time (ad-hoc) rooms} are intended for one-time reservations of virtual resources. The Controller generates a name and unique identifier according to available values from the range configured in the resource specification. That results in a new room name and identification for each reservation. A capacity is reserved when the room is created, and the room is deleted after the requested time slot ends.
 \end{itemize}
 After reserving the room, the user can set up roles for other users or groups (owner, user, reader) and add other participants with specific permissions (administrator, presenter, participant).
-If the reservation is permitted (sufficient capacity is available), the user who created the reservation and the participants added by the user can join the videoconference during the requested time slot.
+Suppose the reservation is permitted (sufficient capacity is available). In that case, the user who created the reservation and the participants added by the user can join the videoconference during the requested time slot.
 
 \section{Architecture}
 Explaining what parts of the system were added, modified, or replaced without fundamental knowledge of the system architecture would be confusing and perhaps impossible to comprehend. This section explains the system’s architecture and components with a closer look.
 
-The system's Architecture is composed of a few separate modules. Their interconnections are shown in \Cref{fig:architecture}.
+The system's architecture is composed of a few separate modules. Their interconnections are shown in \Cref{fig:architecture}.
 
 \subsection{Controller} \label{controller}
 The controller module is the heart of the Shongo system.
-Its primary function is to plan requested reservations (\emph{Scheduler} sub-component) and allocate necessary resources.
+Its main function is to plan requested reservations (\emph{Scheduler} sub-component) and allocate necessary resources.
 Its secondary roles are informing users about their reservations (\emph{NotificationManager} sub-component) and administrating remote virtual resources (\emph{Executor} sub-component) through connected \hyperref[connector]{connectors}.
 Furthermore, last but not least, it is responsible for saving this information into the relational database \emph{PostgreSQL}.
 
@@ -53,23 +53,23 @@ These functionalities are made available for other components with the \emph{API
 
 \subsection{Connector} \label{connector}
 The connector is a component that is responsible for establishing, maintaining and monitoring connections to remote virtual resources (Pexip, H.323 MCU, Adobe Connect, Zoom) and utilizing their functionalities. First and foremost, that includes creating, maintaining and deleting virtual meeting rooms based on users' reservations.
-The connector contains implementations of \emph{Device Agent}s, and each \emph{Device Agent} provides a specific device (e.g. Adobe Connect, Pexip) features to the controller using the device’s \emph{API}.
-Moreover, it enables the system to save data (screenshots for example) from the device to the local file system.
+The connector contains implementations of \emph{Device Agent}s, and each \emph{Device Agent} provides a specific device (e.g. Adobe Connect, Pexip) features to the Controller using the device’s \emph{API}.
+Moreover, it enables the system to save data (screenshots, for example) from the device to the local file system.
 
-The controller communicates with the connector using the \emph{JADE} (Java Agent DEvelopment) framework, which enables the connection of a single connector to multiple controllers. This can be done, for example, in order to distribute the load.
+The Controller communicates with the connector using the \emph{JADE} (Java Agent DEvelopment) framework, which enables the connection of a single connector to multiple controllers. This can be done, for example, in order to distribute the load.
 
 \subsection{Authentication Server}
 The authentication server authenticates incoming requests for the controller component, authenticates users, finds users from various identity providers and obtains information about users for the web client.
 Besides that, it also manages the authentication layer of the web conference system Adobe Connect. This layer uses the user's information gained after logging in via system Shibboleth\footnote{Shibboleth, \url{https://www.shibboleth.net/}}.
 
 \subsection{Web Client} \label{webclient}
-The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the controller’s services. That results in server-side rendering as in typical Model-View-Controller (MVC) architecture illustrated in \Cref{fig:mvc}.
+The web client is the system's primary interface for users. The \emph{SpringMVC} and \emph{AngularJS} frameworks generate web pages with data gained from the Controller’s services. That results in server-side rendering as in typical Model-View-Controller (MVC) architecture illustrated in \Cref{fig:mvc}.
 
 \scalegraphics{assets/mvc_200}{Model-View-Controller architecture}{mvc}
 
 Thanks to this component, users can authenticate via OpenID Connect \footnote{OpenID Connect, \url{https://openid.net/connect/}} and request a reservation of any available resource comfortably via the web browser.
 
 \subsection{Command-line Client}
-The command-line client is the controller's additional interface used for administration. It allows system administrators to manage resources, users, groups and reservation requests which is not possible using the web client.
+The command-line client is the Controller's additional interface used for administration. It allows system administrators to manage resources, users, groups and reservation requests which is not possible using the web client.
 
 \scalegraphics{assets/shongo_architecture_200}{Shongo architecture}{architecture}
