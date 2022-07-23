@@ -5,12 +5,12 @@ The available endpoints include:
     \item \textbf{/api/v1/reservation\_requests} -- Manages the reservation requests. There are two available HTTP methods:
     \begin{description}
         \item \textbf{[GET]} -- Returns all reservation requests (\texttt{ListResponse<Reser\-vationRequestModel>}). However, they can be filtered by many query parameters closely described in \Cref{tab:res}.
-        \item \textbf{[POST]} -- Creates a new reservation request defined by \texttt{Reser\-vationRequestCreateModel} acquired from the request body.
+        \item \textbf{[POST]} -- Creates a new reservation request defined by \texttt{Reser\-vationRequestCreateModel}, which is acquired from the request body.
     \end{description}
     \item \textbf{/api/v1/reservation\_requests/\{id\}} -- Manages the reservation request specified by \texttt{id} path parameter. There are two available HTTP methods:
     \begin{description}
         \item \textbf{[GET]} -- Returns detailed information about the reservation request (\texttt{ReservationRequestDetailModel}). It contains additional information about the current state of the reservation request, its authorized data (\texttt{RoomAuthorizedData}) holding access pins and aliases, and the history of the reservation request (\texttt{List<ReservationRequestHistoryModel>}) holding information about how the request changed over time.
-        \item \textbf{[PATCH]} -- Modifies the reservation request with parameters specified by \texttt{ReservationRequestCreateModel} which is acquired from the request body.
+        \item \textbf{[PATCH]} -- Modifies the reservation request with parameters specified by \texttt{ReservationRequestCreateModel}, which is acquired from the request body.
         \item \textbf{[DELETE]} -- Deletes the reservation request.
     \end{description}
     \item \textbf{[POST] /api/v1/reservation\_requests/\{id\}/accept} -- The administrator or resource owner can use this endpoint to accept the reservation request awaiting confirmation, so it becomes ready for allocation and eventually turns into a reservation.
@@ -24,14 +24,14 @@ The available endpoints include:
         \toprule
         Name & Description \\
         \midrule
-        resource & Filters entries that use given \emph{resource} \\
-        type & Filters entries with given \emph{type} \\
-        search & Filters entries that contains \emph{search} \\
-        participant\_user\_id &  Filters entries that have participant with id \emph{participant\_user\_id} \\
+        resource & Filters entries that use the given \emph{resource} \\
+        type & Filters entries with the given \emph{type} \\
+        search & Filters entries that contain the \emph{search} \\
+        participant\_user\_id &  Filters entries that have a participant with the id \emph{participant\_user\_id} \\
         user\_id & Filters entries that owner's id equals \emph{user\_id} \\
         interval\_from & Filters entries from this date \\  
         interval\_to & Filters entries to this date \\
-        technology & Filters entries by given \emph{TechnologyModel} \\
+        technology & Filters entries by the given \emph{TechnologyModel} \\
         parentRequestId & Filters entries that have \emph{parentRequestId} \\
         allocation\_state & Filters entries that have \emph{allocation\_state} \\
         \bottomrule

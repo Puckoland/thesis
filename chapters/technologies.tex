@@ -9,7 +9,7 @@ Unlike other API designs such as XML-RPC or SOAP, REST APIs support any format f
 
 These rules are called REST design principles --- also known as architectural constraints \cite{ibmrest}:
 \begin{enumerate}
-    \item \textbf{Uniform interface} -- All API requests for the same resource should have the same form disregarding the request origin. The same piece of data, such as the name or email, belongs to one uniform URI (uniform resource identifier).
+    \item \textbf{Uniform interface} -- All API requests for the same resource should have the same form disregarding the origin of the request. The same piece of data, such as the name or email, belongs to one uniform URI (uniform resource identifier).
     \item \textbf{Client-server decoupling} -- The client and server sides of the application should be completely independent of each other. The client should have only one piece of information — the URI of the requested resource. This rule implies that the client cannot interact with the server in any different ways. Analogically, the server should not affect the client in any other way than passing requested data to it.
     \item \textbf{Statelessness} -- Each request includes all the information needed. In other words, the server is not allowed to store any data related to the request, and there are no server-side sessions.
     \item \textbf{Cacheability} -- As low as possible, requests should be made to reduce traffic and improve performance, so as many as possible resources should be cacheable. The server should also inform the client whether the given data in the response is suitable for caching.
@@ -32,11 +32,11 @@ Jackson automatically uses public attributes, or rather getters, to serialize va
 
 
 \section{Spring Framework} \label{sec:spring}
-Nowadays, the most popular framework for Java applications is Spring, which offers a context for the application.
+The most popular framework for Java applications is Spring, which offers a context for the application.
 First of all, the framework starts a container (Spring application context) that manages the application components --- also known as \emph{Beans} --- and wires them together so they can use each other. This wiring is achieved by \emph{dependency injection}.
 The components do not create and maintain different features they depend upon; instead, they rely on a separate entity (Spring application) to manage the dependent modules and inject them into components that need them \cite{walls2022spring}.
 
-The Shongo system is written in Java, and the Spring framework features were used for faster and easier development of the system. Its dependency injection feature was used to inject functionalities of common objects, such as services and caches, into other objects that need these functionalities. In addition, Spring’s web features solved the basic issues of the \emph{Web Client} implementation, such as HTTP request-response processing and MVC implementation.
+The Shongo system is written in Java, and the Spring framework features were used for faster and easier development of the system. Its dependency injection feature was used to inject functionalities of common objects, such as services and caches, into other objects that need these functionalities. In addition, Spring’s web features solved the fundamental issues of the \emph{Web Client} implementation, such as HTTP request-response processing and MVC implementation.
 
 The Spring framework also supports REST API implementation, and this work fully utilizes this feature.
 Spring uses embedded \texttt{Object\-Mapper} from Jackson library (\Cref{sec:jackson}) internally to serialize and deserialize foreign formats (JSON in most cases) to Java objects automatically. The \texttt{ObjectMapper} is very useful when dealing with HTTP requests which usually use JSON for object formatting. Thanks to this feature, an API developer can easily use simple model objects to acquire or provide data to the client via HTTP communication.
@@ -89,7 +89,7 @@ public class DataExample {
 
 \section{Postman} \label{sec:postman}
 Postman is an API platform for building and using APIs. It offers an environment and workspaces to test extensive APIs.
-For these qualities, the Postman was used in the early stages for testing of the developed REST API.
+For these qualities, the Postman was used in the early stages to test the developed REST API.
 
 
 \section{OpenAPI Specification} \label{sec:openapi}

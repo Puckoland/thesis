@@ -3,7 +3,7 @@ The client might also need information concerning \texttt{Resource}s. He might n
 To achieve that, the client can use the endpoints implemented in \texttt{ResourcesController}.
 The available endpoints include:
 \begin{itemize}
-    \item \textbf{[GET] /api/v1/resources} -- Returns all available resources (\texttt{List\-<ResourceModel>}) that users can reserve. The \texttt{technology} (\texttt{Tech\-nologyModel}) and \texttt{tag} query parameters can filter the requested resources.
+    \item \textbf{[GET] /api/v1/resources} -- Returns all available resources (\texttt{List\ <ResourceModel>}) that users can reserve. The \texttt{technology} (\texttt{Tech\-nologyModel}) and \texttt{tag} query parameters can filter the requested resources.
     \item \textbf{[GET] /api/v1/resources/capacity\_utilization} -- Returns utilization of all resources (\texttt{ListResponse<ResourceUtilizationModel>}) in interval specified by \texttt{interval\_from} and \texttt{interval\_to} query parameters. Also, a requested period can be specified by the \texttt{unit} (\texttt{Unit}) query parameter.
     \item \textbf{[GET] /api/v1/resources/\{id\}/capacity\_utilization} -- Returns detailed utilization information (\texttt{ResourceUtilizationDetailModel}) \\about a resource specified by \texttt{id} path parameter. The detail contains additional information about reservations that used the resource in the specified interval, thus utilizing the resource.
 \end{itemize}
